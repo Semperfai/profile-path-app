@@ -1,15 +1,17 @@
 import { defineStore } from 'pinia'
 
+type UserId = Brand<Id, 'UserId'>
+
 interface UserState {
-  id: string
-  theme_id: string
+  id: UserId
+  theme_id: Id
   name: string
-  email: string
+  email: Email
   image: string
   bio: string
   theme: null
   colors: null
-  allLinks: null
+  allLinks: Url[] | null
   isMobile: boolean
   updatedLinkId: number
   addLinkOverlay: boolean
@@ -18,7 +20,7 @@ interface UserState {
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
-    id: '',
+    id: '' as UserId,
     theme_id: '',
     name: '',
     email: '',
