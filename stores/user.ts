@@ -1,4 +1,7 @@
+import axios from '~/plugins/axios'
 import { defineStore } from 'pinia'
+
+const $axios = axios().provide.axios
 
 type UserId = Brand<Id, 'UserId'>
 
@@ -35,5 +38,6 @@ export const useUserStore = defineStore('user', {
     isPreviewOverlay: false
   }),
   getters: {},
-  actions: {}
+  actions: {},
+  persist: true
 })
