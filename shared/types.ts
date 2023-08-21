@@ -4,3 +4,12 @@ export interface NavbarLink {
   icon: string
   img?: string
 }
+
+export const optionsVariants = [
+  'Links',
+  'Apperance',
+  'Preview',
+  'More'
+] as const
+
+export type CurrentMenuOptionsVariant = (typeof optionsVariants)[number]

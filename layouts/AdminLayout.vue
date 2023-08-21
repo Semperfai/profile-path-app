@@ -138,7 +138,7 @@
       <div class="flex items-center justify-between w-full py-[8px]">
         <div
           class="flex items-center justify-between w-full text-3xl font-bold max-w-[500px]">
-          {{ currentMobilePage() }}
+          {{ currentMenuOptionsVariant() }}
         </div>
 
         <div class="flex items-center justify-between gap-3">
@@ -204,7 +204,10 @@
 
 <script setup lang="ts">
 import { useUserStore } from '~~/stores/user'
-import { type NavbarLink } from '~~/shared/types'
+import {
+  type NavbarLink,
+  type CurrentMenuOptionsVariant
+} from '~~/shared/types'
 const userStore = useUserStore()
 
 const route = useRoute()
@@ -276,7 +279,7 @@ const openMenu = (str: string): void => {
   }
 }
 
-const currentMobilePage = (): string => {
+const currentMenuOptionsVariant = (): CurrentMenuOptionsVariant => {
   switch (route.fullPath) {
     case '/admin':
       return 'Links'
@@ -309,9 +312,15 @@ watch(
   }
 )
 
+const updateWindowWidth = () => {
+  windowWidth.value = window.innerWidth
+}
+
 onMounted(() => {
-  window.addEventListener('resize', function () {
-    windowWidth.value = window.innerWidth
-  })
+  window.addEventListener('resize', updateWindowWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWindowWidth)
 })
 </script>
