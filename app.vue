@@ -3,7 +3,7 @@
   <NuxtPage />
 </template>
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user/user'
+import { useUserStore } from '~/stores/user/user.store'
 import { storeToRefs } from 'pinia'
 import { type Color } from '~/shared/types'
 

@@ -203,11 +203,8 @@
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from '~/stores/user/user'
-import {
-  type NavbarLink,
-  type CurrentMenuOptionsVariant
-} from '~~/shared/types'
+import { useUserStore } from '~/stores/user/user.store'
+import { type NavbarLink, type CurrentMenuOptionsVariant } from '~/shared/types'
 const userStore = useUserStore()
 
 const route = useRoute()

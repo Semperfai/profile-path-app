@@ -59,7 +59,7 @@
 <script setup>
 import AuthLayout from '~/layouts/AuthLayout.vue'
 
-import { useUserStore } from '~/stores/user/user'
+import { useUserStore } from '~/stores/user/user.store'
 const userStore = useUserStore()
 
 const router = useRouter()
