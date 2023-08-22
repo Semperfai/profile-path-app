@@ -31,7 +31,7 @@
 </template>
 
 <script setup>
-import { useUserStore } from '../stores/user'
+import { useUserStore } from '~/stores/user/user'
 import { storeToRefs } from 'pinia'
 const userStore = useUserStore()
 const { updatedLinkId } = storeToRefs(userStore)

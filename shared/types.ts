@@ -5,6 +5,13 @@ export interface NavbarLink {
   img?: string
 }
 
+export type Color = {
+  id: number
+  color: string
+  text: string
+  name: string
+}
+
 export const optionsVariants = [
   'Links',
   'Apperance',
