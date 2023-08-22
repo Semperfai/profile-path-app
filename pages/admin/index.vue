@@ -46,4 +46,20 @@ import AdminLayout from '~/layouts/AdminLayout.vue'
 
 import { useUserStore } from '~~/stores/user/user.store'
 const userStore = useUserStore()
+
+const selectedInput = ref<{ id: number; str: string }>({ id: 0, str: '' })
+const showAddLink = ref<boolean>(false)
+
+const updateInput = (e) => {
+  selectedInput.value.id = e.id
+  selectedInput.value.str = e.str
+}
+
+const showAddLinkFunc = () => {
+  if (userStore.isMobile) {
+    userStore.addLinkOverlay = true
+  } else {
+    showAddLink.value = !showAddLink.value
+  }
+}
 </script>
