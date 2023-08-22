@@ -60,7 +60,7 @@
             class="rounded-full md:block hidden">
             <img
               class="rounded-full min-w-[40px] w-[40px]"
-              :src="userStore.image" />
+              src="https://picsum.photos/id/8/300/320" />
           </button>
         </div>
       </div>
@@ -238,7 +238,12 @@ const linksSecondaryNav = ref<NavbarLink[]>([
     icon: 'fluent:shapes-48-regular'
   },
   { name: 'Analytics', url: '/', icon: 'tabler:brand-google-analytics' },
-  { name: 'More', url: '/admin/more', icon: '', img: userStore.image }
+  {
+    name: 'More',
+    url: '/admin/more',
+    icon: '',
+    img: 'https://picsum.photos/id/8/300/320'
+  }
 ])
 
 const linksMobile = ref<NavbarLink[]>([
