@@ -11,7 +11,7 @@ export interface UserState {
   bio: string
   theme: null
   colors: Color[]
-  allLinks: Url[] | null
+  allLinks: Url[]
   isMobile: boolean
   updatedLinkId: number
   addLinkOverlay: boolean
