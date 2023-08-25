@@ -30,7 +30,7 @@
               },
               { 'max-h-0 transition-all duration-300 ease-out': !showAddLink }
             ]" />
-          <div class="mt-4" v-for="link in fakeLink">
+          <div class="mt-4" v-for="link in links">
             <LinkBox
               v-if="link"
               :link="link"
@@ -49,7 +49,7 @@
 
 <script setup lang="ts">
 import AdminLayout from '~/layouts/AdminLayout.vue'
-
+import { links } from '~~/__mocks__/links'
 import { useUserStore } from '~~/stores/user/user.store'
 const userStore = useUserStore()
 
@@ -68,25 +68,4 @@ const showAddLinkFunc = () => {
     showAddLink.value = !showAddLink.value
   }
 }
-
-const fakeLink = [
-  {
-    id: 1,
-    name: 'Google',
-    url: 'https://google.com',
-    image: '"https://picsum.photos/id/8/300/320"'
-  },
-  {
-    id: 2,
-    name: 'Twitter',
-    url: 'https://google.com',
-    image: '"https://picsum.photos/id/8/300/320"'
-  },
-  {
-    id: 3,
-    name: 'Facebook',
-    url: 'https://google.com',
-    image: '"https://picsum.photos/id/8/300/320"'
-  }
-]
 </script>
