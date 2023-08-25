@@ -36,7 +36,7 @@
               :link="link"
               :selectedId="selectedInput.id"
               :selectedStr="selectedInput.str"
-              @updateInput="updateInput"
+              @updatedInput="updateInput"
               class="mt-6" />
           </div>
         </div>
