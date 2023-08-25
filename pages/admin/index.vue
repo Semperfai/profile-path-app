@@ -30,8 +30,14 @@
               },
               { 'max-h-0 transition-all duration-300 ease-out': !showAddLink }
             ]" />
-          <div class="mt-4">
-            <LinkBox />
+          <div class="mt-4" v-for="link in fakeLink">
+            <LinkBox
+              v-if="link"
+              :link="link"
+              :selectedId="selectedInput.id"
+              :selectedStr="selectedInput.str"
+              @updateInput="updateInput"
+              class="mt-6" />
           </div>
         </div>
       </div>
@@ -62,4 +68,25 @@ const showAddLinkFunc = () => {
     showAddLink.value = !showAddLink.value
   }
 }
+
+const fakeLink = [
+  {
+    id: 1,
+    name: 'Google',
+    url: 'https://google.com',
+    image: '"https://picsum.photos/id/8/300/320"'
+  },
+  {
+    id: 2,
+    name: 'Twitter',
+    url: 'https://google.com',
+    image: '"https://picsum.photos/id/8/300/320"'
+  },
+  {
+    id: 3,
+    name: 'Facebook',
+    url: 'https://google.com',
+    image: '"https://picsum.photos/id/8/300/320"'
+  }
+]
 </script>

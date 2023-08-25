@@ -1,11 +1,11 @@
 <template>
-  <div class="w-full bg-white rounded-3xl">
+  <div :id="`LinkBox${link.id}`" class="w-full bg-white rounded-3xl">
     <div id="MainLinkBoxSection" class="px-8 py-5">
       <div class="flex items-center justify-between py-1">
         <div class="flex items-center w-full">
           <input
-            v-if="true"
-            :id="`editNameInput-`"
+            v-if="editName(selectedId, selectedStr)"
+            :id="`editNameInput-${link.id}`"
             type="text"
             v-model="name"
             maxlength="18"
@@ -13,12 +13,22 @@
 
           <div v-else class="flex items-center w-full">
             <div
-              @click=""
+              @click="
+                ($event) => {
+                  name = link.name
+                  $emit('updatedInput', { id: link.id, str: 'isName' })
+                }
+              "
               class="font-semibold mr-2 cursor-pointer"
               :class="isMobile ? 'text-xl' : 'text-sm'">
-              TEST URL
+              {{ link.name }}
             </div>
             <Icon
+              @click="
+                ($event) => {
+                  $emit('updatedInput', { id: link.id, str: 'isName' })
+                }
+              "
               class="cursor-pointer"
               name="octicon:pencil-24"
               :size="isMobile ? '23' : '17'"
@@ -38,18 +48,28 @@
       <div class="flex items-center justify-between py-1">
         <div class="flex items-center w-full">
           <input
-            v-if="true"
-            :id="`editLinkInput-`"
+            v-if="editLink(selectedId, selectedStr)"
+            :id="`editLinkInput-${link.id}`"
             type="text"
             v-model="url"
             class="w-full text-sm focus:outline-none" />
           <div v-else class="flex items-center w-[calc(100%-2px)]">
             <div
+              @click="
+                ($event) => {
+                  url = link.url
+                  $emit('updatedInput', { id: link.id, str: 'isLink' })
+                }
+              "
               class="mr-2 truncate cursor-pointer"
               :class="isMobile ? 'text-lg' : 'text-sm'">
-              TEST URL 2
+              {{ link.url }}
             </div>
             <Icon
+              @click="
+                ($event) =>
+                  $emit('updatedInput', { id: link.id, str: 'isLink' })
+              "
               class="cursor-pointer min-w-[17px]"
               :class="isMobile ? 'min-w-[23px]' : 'min-w-[17px]'"
               name="octicon:pencil-24"
@@ -65,6 +85,7 @@
             class="flex items-center px-1.5 py-[2px] absolute -left-[6px] rounded-md"
             :class="isUploadImage ? 'bg-[#8228D9]' : 'hover:bg-gray-200'">
             <Icon
+              @click="editImage()"
               class="cursor-pointer"
               name="icon-park-twotone:collect-picture"
               :size="isMobile ? '23' : '17'"
@@ -252,4 +273,54 @@ const editImage = (): void => {
     isDelete.value = false
   }
 }
+
+const updateLinkImage = async () => {
+  //
+}
+
+const deleteLink = async () => {
+  let res = confirm('Are you sure you want to delete this link?')
+}
+
+watch(
+  () => name.value,
+  () => {
+    if (name.value && name.value !== link.value.name) {
+      updateLink()
+    }
+  }
+)
+
+watch(
+  () => url.value,
+  () => {
+    if (url.value && url.value !== link.value.url) {
+      updateLink()
+    }
+  }
+)
+
+watch(
+  () => selectedId.value,
+  () => {
+    if (selectedId.value) {
+      changeInput('isName', 'editNameInput')
+      changeInput('isLink', 'editLinkInput')
+    }
+  }
+)
+
+watch(
+  () => updatedLinkId.value,
+  (val) => {
+    if (!val) {
+      emit('updatedInput', { id: 0, str: '' })
+    }
+  }
+)
+
+watch(
+  () => data.value,
+  async () => await updateLinkImage()
+)
 </script>
