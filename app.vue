@@ -3,6 +3,7 @@
   <div v-if="bgIsGray" class="bg-[#F3F3F1] fixed w-full h-full z-[-1]" />
 
   <NuxtPage />
+  <PreviewOverlay v-if="!isMobile && isPreviewOverlay" />
 </template>
 <script setup lang="ts">
 import { useUserStore } from '~/stores/user/user.store'
