@@ -115,10 +115,22 @@
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 
+interface CropperComponent {
+  getResult(): {
+    coordinates: {
+      width?: string;
+      height?: string;
+      left?: string;
+      top?: string;
+      transform?: string;
+    };
+  };
+}
+
 const emit = defineEmits(["close", "data"]);
 
 const props = defineProps<{
-  linkId?: number;
+  linkId: number;
 }>();
 const { linkId } = toRefs(props);
 
@@ -128,7 +140,7 @@ const canvas = ref<HTMLCanvasElement | null>(null);
 const isNewPhoto = ref<boolean | null>(null);
 const isOpenCamera = ref<boolean | null>(null);
 const photoData = ref<Url | null>(null);
-const cropper = ref(null);
+const cropper = ref<CropperComponent | null>(null);
 const uploadedImage = ref<string>("");
 const isTakingPhoto = ref<boolean>(false);
 const isCropping = ref<boolean>(false);
@@ -193,6 +205,25 @@ const takePhoto = () => {
     photoData.value = canvasLocal.toDataURL();
 
     convertBlobToUrl(photoData.value);
+  }
+};
+
+const cropImage = async () => {
+  isCropping.value = true;
+  if (cropper.value) {
+    const { coordinates } = cropper.value.getResult();
+
+    const data = new FormData();
+
+    data.append("image", file.value || "");
+    data.append("height", coordinates.height || "");
+    data.append("width", coordinates.width || "");
+    data.append("left", coordinates.left || "");
+    data.append("top", coordinates.top || "");
+    data.append("id", linkId.value || "");
+
+    isCropping.value = true;
+    emit("data", data);
   }
 };
 </script>
