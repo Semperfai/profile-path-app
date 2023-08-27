@@ -112,6 +112,8 @@
 <script setup lang="ts">
 import { useUserStore } from "~~/stores/user/user.store";
 import { storeToRefs } from "pinia";
+import { type Link } from "~~/shared/types";
+import { setTimeout } from "timers";
 const userStore = useUserStore();
 const { updatedLinkId } = storeToRefs(userStore);
 
@@ -120,7 +122,107 @@ const isLink = ref<boolean>(false);
 const name = ref<string>("");
 const url = ref<string>("");
 const data = ref(null);
-const currentLink = ref(null);
+const currentLink = ref<Link | null>(null);
 const openCropper = ref<boolean>(false);
 const errors = ref(null);
+
+const getLinkById = () => {
+  userStore.allLinks.forEach((link) => {
+    if (updatedLinkId.value == link.id) {
+      currentLink.value = link;
+      name.value = link.name;
+      url.value = link.url;
+    }
+  });
+};
+
+const closes = () => (updatedLinkId.value = 0);
+
+const updateLinkImage = async () => {
+  //
+};
+
+const deleteLink = async () => {
+  let res = confirm("Are you sure you want to delete this link?");
+};
+
+const isFocused = (str: string) => {
+  if (str === "isName") {
+    setTimeout(() => {
+      document.getElementById("editNameInputMobile")?.focus();
+    });
+
+    isName.value = true;
+    isLink.value = false;
+  }
+
+  if (str === "isLink") {
+    setTimeout(() => {
+      document.getElementById("editLinkInputMobile")?.focus();
+    });
+
+    isName.value = false;
+    isLink.value = true;
+  }
+};
+
+const updateLink = useDebounce(async () => {
+  //
+});
+
+watch(
+  () => name.value,
+  () => {
+    if (
+      name.value &&
+      currentLink.value &&
+      currentLink.value.name != name.value
+    ) {
+      errors.value = null;
+      updateLink();
+    }
+  }
+);
+
+watch(
+  () => url.value,
+  () => {
+    if (url.value && currentLink.value && currentLink.value.url != url.value) {
+      errors.value = null;
+      updateLink();
+    }
+  }
+);
+
+watch(
+  () => data.value,
+  async () => await updateLinkImage()
+);
+
+onMounted(() => {
+  //getLinkById()
+  //userStore.hidePageOverflow(true,'AdminPage')
+
+  document.addEventListener("mouseup", (e) => {
+    let editNameInput = document.getElementById(`editNameInputMobile`);
+
+    if (editNameInput && !editNameInput.contains(e.target as HTMLElement)) {
+      editNameInput.blur();
+      isName.value = false;
+    }
+  });
+  document.addEventListener("mouseup", (e) => {
+    let editLinkInput = document.getElementById(`editLinkInputMobile`);
+
+    if (editLinkInput && !editLinkInput.contains(e.target as HTMLElement)) {
+      editLinkInput.blur();
+      isLink.value = false;
+    }
+  });
+});
+
+onUnmounted(() => {
+  //   userStore.hidePageOverflow(false, "AdminPage");
+  updatedLinkId.value = 0;
+});
 </script>
