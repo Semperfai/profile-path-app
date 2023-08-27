@@ -45,7 +45,7 @@
               <textarea
                 v-model="bio"
                 rows="4"
-                maxlength="80"
+                maxlength="120"
                 placeholder="Bio"
                 @focus="isBioFocused = true"
                 @blur="isBioFocused = false"
@@ -55,7 +55,7 @@
               <div
                 class="flex items-center justify-end text-[#676B5F] text-[13px]"
               >
-                {{ bioLengthComputed }}/80
+                {{ bioLengthComputed }}/120
               </div>
             </div>
           </div>
@@ -83,7 +83,10 @@
                         : 'transition-all duration-150 ease-out p-0'
                     "
                   >
-                    <div class="relative rounded-xl h-full mx-auto">
+                    <div
+                      @click="($event) => updateTheme(item.id)"
+                      class="relative rounded-xl h-full mx-auto"
+                    >
                       <div
                         class="absolute left-0 top-0 h-full w-full z-0"
                         :class="item.color"
@@ -138,4 +141,25 @@ const openCropper = ref<boolean>(false);
 const bioLengthComputed = computed(() => {
   return bio.value.length;
 });
+
+const updateTheme = async (themeId: number) => {
+  //
+};
+
+const updateUserDetails = useDebounce(async () => {});
+
+const updateUserImage = async () => {};
+
+watch(
+  () => name.value,
+  async () => await updateUserDetails()
+);
+watch(
+  () => bio.value,
+  async () => await updateUserDetails()
+);
+watch(
+  () => data.value,
+  async () => await updateUserImage()
+);
 </script>

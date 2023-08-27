@@ -15,7 +15,8 @@ export type Color = {
 export type Link = {
   id: number;
   name: string;
-  url: Url;
+  url: string;
+  image?: string;
 };
 
 export const optionsVariants = [
