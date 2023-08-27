@@ -125,9 +125,9 @@ const { linkId } = toRefs(props);
 const file = ref<File | null>(null);
 const video = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
-const isNewPhoto = ref(null);
+const isNewPhoto = ref<boolean | null>(null);
 const isOpenCamera = ref<boolean | null>(null);
-const photoData = ref(null);
+const photoData = ref<Url | null>(null);
 const cropper = ref(null);
 const uploadedImage = ref<string>("");
 const isTakingPhoto = ref<boolean>(false);
@@ -163,6 +163,36 @@ const startCamera = async () => {
     } catch (error) {
       console.error("Error accessing camera:", error);
     }
+  }
+};
+
+const convertBlobToUrl = async (photoData: string) => {
+  const blob = await (await fetch(photoData)).blob();
+
+  file.value = new File([blob], "NEW_PHOTO.png", { type: blob.type });
+
+  uploadedImage.value = URL.createObjectURL(file.value);
+
+  isOpenCamera.value = false;
+};
+
+const takePhoto = () => {
+  let videoLocal = video.value;
+  let canvasLocal = canvas.value;
+
+  if (canvasLocal && videoLocal) {
+    canvasLocal.width = videoLocal.getBoundingClientRect().width;
+    canvasLocal.height = videoLocal.getBoundingClientRect().height;
+
+    let context = canvasLocal.getContext("2d");
+
+    context?.drawImage(videoLocal, 0, 0, canvasLocal.width, canvasLocal.height);
+
+    isNewPhoto.value = true;
+
+    photoData.value = canvasLocal.toDataURL();
+
+    convertBlobToUrl(photoData.value);
   }
 };
 </script>
