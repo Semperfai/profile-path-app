@@ -122,14 +122,47 @@ const props = defineProps<{
 }>();
 const { linkId } = toRefs(props);
 
-const file = ref(null);
-const video = ref(null);
-const canvas = ref(null);
+const file = ref<File | null>(null);
+const video = ref<HTMLVideoElement | null>(null);
+const canvas = ref<HTMLCanvasElement | null>(null);
 const isNewPhoto = ref(null);
-const isOpenCamera = ref(null);
+const isOpenCamera = ref<boolean | null>(null);
 const photoData = ref(null);
 const cropper = ref(null);
-const uploadedImage = ref(null);
+const uploadedImage = ref<string>("");
 const isTakingPhoto = ref<boolean>(false);
 const isCropping = ref<boolean>(false);
+
+const getUploadedImage = (e: Event) => {
+  const inputElement = e.target as HTMLInputElement;
+  const selectedFile = inputElement.files?.[0];
+
+  if (selectedFile) {
+    file.value = selectedFile;
+    uploadedImage.value = URL.createObjectURL(selectedFile);
+  }
+};
+
+const startCamera = async () => {
+  isOpenCamera.value = true;
+
+  if (navigator.mediaDevices) {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width: { max: 1024 },
+          height: { max: 1024 },
+          aspectRatio: { ideal: 1 },
+        },
+      });
+
+      if (video.value) {
+        video.value.srcObject = stream;
+        video.value.play();
+      }
+    } catch (error) {
+      console.error("Error accessing camera:", error);
+    }
+  }
+};
 </script>
