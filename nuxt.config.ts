@@ -2,21 +2,22 @@
 export default defineNuxtConfig({
   pages: true,
   experimental: {
-    payloadExtraction: false
+    payloadExtraction: false,
   },
-  css: ['~/assets/css/main.css'],
+  css: ["~/assets/css/main.css"],
   postcss: {
     plugins: {
       tailwindcss: {},
-      autoprefixer: {}
-    }
+      autoprefixer: {},
+    },
   },
   modules: [
-    'nuxt-icon',
-    'nuxt-lodash',
-    '@pinia/nuxt',
-    '@pinia-plugin-persistedstate/nuxt',
-    '@vite-pwa/nuxt'
+    "nuxt-icon",
+    "nuxt-lodash",
+    "@pinia/nuxt",
+    "@pinia-plugin-persistedstate/nuxt",
+    "@vite-pwa/nuxt",
+    "@nuxtjs/supabase",
   ],
   // pwa: {
   //   manifest: {
@@ -44,8 +45,8 @@ export default defineNuxtConfig({
   // },
   app: {
     head: {
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1, maximum-scale=1'
-    }
-  }
-})
+      charset: "utf-8",
+      viewport: "width=device-width, initial-scale=1, maximum-scale=1",
+    },
+  },
+});
