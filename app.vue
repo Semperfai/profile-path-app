@@ -1,6 +1,6 @@
 <template>
   <VitePwaManifest />
-  <div class="bg-[#F3F3F1] fixed w-full h-full z-[-1]" />
+  <BaseMask v-if="bgIsGray" />
 
   <NuxtPage />
 
@@ -9,6 +9,7 @@
   <PreviewOverlay v-if="!isMobile && isPreviewOverlay" />
 </template>
 <script setup lang="ts">
+import BaseMask from "~~/components/UI/BaseMask.vue";
 import { useUserStore } from "~/stores/user/user.store";
 import { storeToRefs } from "pinia";
 import { type Color } from "~/shared/types";
