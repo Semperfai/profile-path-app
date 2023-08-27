@@ -23,13 +23,15 @@
   </AdminLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AdminLayout from "~~/layouts/AdminLayout.vue";
-import { useUserStore } from "~~/stores/user";
+import { useUserStore } from "~~/stores/user/user.store";
 const userStore = useUserStore();
 const router = useRouter();
 
-let windowWidth = ref(window.innerWidth);
+const windowWidth = ref<number | string>(
+  process.client ? window.innerWidth : ""
+);
 
 onMounted(() => {
   window.addEventListener("resize", function () {
@@ -40,6 +42,7 @@ onMounted(() => {
 const logout = async () => {
   let res = confirm("Are you sure you want to sign out?");
   try {
+    console.log("i logout");
   } catch (error) {
     console.log(error);
   }
@@ -48,7 +51,7 @@ const logout = async () => {
 watch(
   () => windowWidth.value,
   () => {
-    if (windowWidth.value >= 767) {
+    if (typeof windowWidth.value === "number" && windowWidth.value >= 767) {
       router.push("/admin");
     }
   }
