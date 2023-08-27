@@ -1,10 +1,10 @@
 <template>
   <VitePwaManifest />
-  <div v-if="bgIsGray" class="bg-[#F3F3F1] fixed w-full h-full z-[-1]" />
+  <div class="bg-[#F3F3F1] fixed w-full h-full z-[-1]" />
 
   <NuxtPage />
 
-  <UpdateLinkOverlay />
+  <UpdateLinkOverlay v-if="isMobile && updatedLinkId" />
   <AddLinkOverlay v-if="isMobile && addLinkOverlay" />
   <PreviewOverlay v-if="!isMobile && isPreviewOverlay" />
 </template>
