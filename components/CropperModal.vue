@@ -112,6 +112,7 @@
 </template>
 
 <script setup lang="ts">
+import { type ICropperFormDataFields } from "~~/shared/types";
 import { Cropper } from "vue-advanced-cropper";
 import "vue-advanced-cropper/dist/style.css";
 
@@ -127,11 +128,15 @@ interface CropperComponent {
   };
 }
 
-const emit = defineEmits(["close", "data"]);
+const emit = defineEmits<{
+  (e: "close"): void;
+  (e: "data", data: ICropperFormDataFields): void;
+}>();
 
 const props = defineProps<{
-  linkId: number;
+  linkId?: number;
 }>();
+
 const { linkId } = toRefs(props);
 
 const file = ref<File | null>(null);
@@ -208,6 +213,21 @@ const takePhoto = () => {
   }
 };
 
+const convertFormDataToICropperFormDataFields = (
+  formData: FormData
+): ICropperFormDataFields => {
+  const fields: ICropperFormDataFields = {
+    image: formData.get("image") || "",
+    height: formData.get("height") as string | number,
+    width: formData.get("width") as string | number,
+    left: formData.get("left") as string | number,
+    top: formData.get("top") as string | number,
+    id: formData.get("id") as string | number,
+  };
+
+  return fields;
+};
+
 const cropImage = async () => {
   isCropping.value = true;
   if (cropper.value) {
@@ -216,14 +236,16 @@ const cropImage = async () => {
     const data = new FormData();
 
     data.append("image", file.value || "");
-    data.append("height", coordinates.height || "");
-    data.append("width", coordinates.width || "");
-    data.append("left", coordinates.left || "");
-    data.append("top", coordinates.top || "");
+    if (coordinates) {
+      data.append("height", coordinates.height || "");
+      data.append("width", coordinates.width || "");
+      data.append("left", coordinates.left || "");
+      data.append("top", coordinates.top || "");
+    }
     data.append("id", linkId.value || "");
 
     isCropping.value = true;
-    emit("data", data);
+    emit("data", convertFormDataToICropperFormDataFields(data));
   }
 };
 </script>

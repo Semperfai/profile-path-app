@@ -19,6 +19,15 @@ export type Link = {
   image?: string;
 };
 
+export interface ICropperFormDataFields {
+  image: Blob | string;
+  height?: number | string;
+  width?: number | string;
+  left?: number | string;
+  top?: number | string;
+  id?: number | string;
+}
+
 export const optionsVariants = [
   "Links",
   "Apperance",

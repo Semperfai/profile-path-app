@@ -129,11 +129,13 @@
 <script setup lang="ts">
 import AdminLayout from "~~/layouts/AdminLayout.vue";
 import { useUserStore } from "~~/stores/user/user.store";
+import { type ICropperFormDataFields } from "~~/shared/types";
+
 const userStore = useUserStore();
 
 const name = ref<string>("");
 const bio = ref<string>("");
-const data = ref(null);
+const data = ref<ICropperFormDataFields | null>(null);
 const errors = ref<string>("");
 const isBioFocused = ref<boolean>(false);
 const openCropper = ref<boolean>(false);
