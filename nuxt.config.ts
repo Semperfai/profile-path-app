@@ -17,7 +17,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
     "@vite-pwa/nuxt",
-    "@nuxtjs/supabase",
+    // "@nuxtjs/supabase",
   ],
   // pwa: {
   //   manifest: {
