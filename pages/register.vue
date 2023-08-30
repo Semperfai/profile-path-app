@@ -10,9 +10,7 @@
           <TextInput
             placeholder="Username"
             v-model:input="name"
-            inputType="text"
-            :error="errors && errors.name ? errors.name[0] : ''"
-          />
+            inputType="text" />
         </div>
 
         <div class="mt-4">
@@ -20,8 +18,7 @@
             placeholder="Email: link@gmail.com"
             v-model:input="email"
             inputType="email"
-            :error="errors && errors.email ? errors.email[0] : ''"
-          />
+            :error="errors && errors.includes('Email') ? errors : ''" />
         </div>
 
         <div class="mt-4">
@@ -29,16 +26,14 @@
             placeholder="Password"
             v-model:input="password"
             inputType="password"
-            :error="errors && errors.password ? errors.password[0] : ''"
-          />
+            :error="errors && errors?.includes('Password') ? errors : ''" />
         </div>
 
         <div class="mt-4">
           <TextInput
             placeholder="Confirm Password"
             v-model:input="confirmPassword"
-            inputType="password"
-          />
+            inputType="password" />
         </div>
 
         <div class="mt-10">
@@ -46,8 +41,7 @@
             type="submit"
             class="rounded-full w-full p-3 font-bold transition-all duration-300 ease-linear"
             :disabled="submitDisabled"
-            :class="submitButtonState"
-          >
+            :class="submitButtonState">
             Create account
           </button>
         </div>
@@ -62,41 +56,64 @@
 </template>
 
 <script setup>
-const supabase = useSupabaseClient();
+import AuthLayout from '~/layouts/AuthLayout.vue'
+import { useUserStore } from '~/stores/user/user.store'
 
-const { data, error } = await supabase.auth.admin.createUser({
-  email: "user@email.com",
-  password: "password",
-  user_metadata: { name: "Yoda" },
-});
+const supabase = useSupabaseClient()
 
-import AuthLayout from "~/layouts/AuthLayout.vue";
+const user = useSupabaseUser()
 
-import { useUserStore } from "~/stores/user/user.store";
-const userStore = useUserStore();
+const router = useRouter()
 
-const router = useRouter();
-
-const name = ref(null);
-const email = ref(null);
-const password = ref(null);
-const confirmPassword = ref(null);
-const errors = ref(null);
+const name = ref(null)
+const email = ref(null)
+const password = ref(null)
+const confirmPassword = ref(null)
+const errors = ref(null)
 
 const submitDisabled = computed(() => {
   return (
-    !name.value || !email.value || !password.value || !confirmPassword.value
-  );
-});
+    !name.value ||
+    !email.value ||
+    !password.value ||
+    !confirmPassword.value ||
+    password.value !== confirmPassword.value
+  )
+})
 
 const submitButtonState = computed(() => {
   return {
-    "bg-[#EFF0EB] text-[#A7AAA2]": submitDisabled.value,
-    "bg-[#8228D9] hover:bg-[#6c21b3] text-white": !submitDisabled.value,
-  };
-});
+    'bg-[#EFF0EB] text-[#A7AAA2]': submitDisabled.value,
+    'bg-[#8228D9] hover:bg-[#6c21b3] text-white': !submitDisabled.value
+  }
+})
 
 const register = async () => {
-  errors.value = null;
-};
+  errors.value = null
+
+  try {
+    const { data, error } = await supabase.auth.signUp({
+      email: email.value,
+      password: password.value,
+      options: {
+        data: {
+          name: name.value
+        }
+      }
+    })
+
+    errors.value = error.message
+    if (error) {
+      throw error
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+watchEffect(() => {
+  if (user.value) {
+    navigateTo('/')
+  }
+})
 </script>
