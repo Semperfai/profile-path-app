@@ -63,10 +63,12 @@ const router = useRouter()
 const login = async () => {
   errors.value = ''
   try {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value
     })
+
+    //todo await userStore.getAllLinks() we need this? we can implement this in store?
 
     await userStore.getUser(user.value.id)
 
