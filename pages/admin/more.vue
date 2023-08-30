@@ -41,13 +41,15 @@ onMounted(() => {
 const logout = async () => {
   let res = confirm('Are you sure you want to sign out?')
 
-  if (res) {
-    try {
-      supabase.auth.signOut()
-      return navigateTo('/')
-    } catch (error) {
-      console.log(error)
+  try {
+    if (res) {
+      await supabase.auth.signOut()
+      userStore.resetState()
+      router.push('/')
+      return
     }
+  } catch (error) {
+    console.log(error)
   }
 }
 
