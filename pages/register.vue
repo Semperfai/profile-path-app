@@ -57,13 +57,10 @@
 
 <script setup>
 import AuthLayout from '~/layouts/AuthLayout.vue'
-import { useUserStore } from '~/stores/user/user.store'
 
 const supabase = useSupabaseClient()
 
 const user = useSupabaseUser()
-
-const router = useRouter()
 
 const name = ref(null)
 const email = ref(null)
@@ -103,9 +100,6 @@ const register = async () => {
     })
 
     errors.value = error.message
-    if (error) {
-      throw error
-    }
   } catch (error) {
     console.log(error)
   }
@@ -113,7 +107,7 @@ const register = async () => {
 
 watchEffect(() => {
   if (user.value) {
-    navigateTo('/')
+    navigateTo('/admin')
   }
 })
 </script>
