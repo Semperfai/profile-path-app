@@ -60,6 +60,10 @@ const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
 
+definePageMeta({
+  middleware: 'is-logged-in'
+})
+
 const login = async () => {
   errors.value = ''
   try {
