@@ -22,7 +22,8 @@ export const useUserStore = defineStore('user', {
   }),
   getters: {},
   actions: {
-    async getUser(id: string) {
+    async getUser(id: UserId) {
+      this.$state.id = id
       console.log('getUser', id)
     },
     resetState() {
