@@ -9,7 +9,7 @@
         <div>
           <TextInput
             v-model:input="email"
-            :error="errors && errors.email ? errors.email[0] : null"
+            :error="errors"
             placeholder="Email: link@gmail.com"
             inputType="email" />
         </div>
@@ -19,7 +19,7 @@
             placeholder="Password"
             v-model:input="password"
             inputType="password"
-            :error="errors && errors.password ? errors.password[0] : ''" />
+            :error="errors" />
         </div>
 
         <div class="mt-10">
@@ -52,16 +52,26 @@ import AuthLayout from '~/layouts/AuthLayout.vue'
 
 const email = ref<string>('')
 const password = ref<string>('')
-const errors = ref(null)
+const errors = ref<string>('')
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 
 const login = async () => {
-  const { data, error } = await supabase.auth.signInWithPassword({
-    email: email.value,
-    password: password.value
-  })
+  try {
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: email.value,
+      password: password.value
+    })
+
+    if (error) {
+      errors.value = error.message
+      debugger
+      return
+    }
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 watch(

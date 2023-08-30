@@ -55,18 +55,18 @@
   </AuthLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
 
 const supabase = useSupabaseClient()
 
 const user = useSupabaseUser()
 
-const name = ref(null)
-const email = ref(null)
-const password = ref(null)
-const confirmPassword = ref(null)
-const errors = ref(null)
+const name = ref<string>('')
+const email = ref<string>('')
+const password = ref<string>('')
+const confirmPassword = ref<string>('')
+const errors = ref<string>('')
 
 const submitDisabled = computed(() => {
   return (
@@ -86,7 +86,7 @@ const submitButtonState = computed(() => {
 })
 
 const register = async () => {
-  errors.value = null
+  errors.value = ''
 
   try {
     const { data, error } = await supabase.auth.signUp({
@@ -99,7 +99,10 @@ const register = async () => {
       }
     })
 
-    errors.value = error.message
+    if (error) {
+      errors.value = error.message
+      return
+    }
   } catch (error) {
     console.log(error)
   }
