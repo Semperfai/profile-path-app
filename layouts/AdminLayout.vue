@@ -300,13 +300,17 @@ const currentMenuOptionsVariant = (): CurrentMenuOptionsVariant => {
 const logout = async () => {
   let res = confirm('Are you sure you want to sign out?')
 
-  if (res) {
-    try {
+  try {
+    if (res) {
       await supabase.auth.signOut()
-      return navigateTo('/')
-    } catch (error) {
-      console.log(error)
+      userStore.resetState()
+      router.push('/')
+      return
     }
+
+    isTopNav.value = false
+  } catch (error) {
+    console.log(error)
   }
 }
 

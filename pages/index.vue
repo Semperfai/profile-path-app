@@ -49,24 +49,29 @@
 
 <script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
+import { useUserStore } from '~/stores/user/user.store'
 
+const userStore = useUserStore()
 const email = ref<string>('')
 const password = ref<string>('')
 const errors = ref<string>('')
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
+const router = useRouter()
 
 const login = async () => {
+  errors.value = ''
   try {
     const { data, error } = await supabase.auth.signInWithPassword({
       email: email.value,
       password: password.value
     })
 
+    await userStore.getUser(user.value.id)
+
     if (error) {
       errors.value = error.message
-      debugger
       return
     }
   } catch (error) {
@@ -78,7 +83,7 @@ watch(
   user,
   () => {
     if (user.value) {
-      return navigateTo('/admin')
+      router.push('/admin')
     }
   },
   { immediate: true }
