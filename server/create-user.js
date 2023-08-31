@@ -7,12 +7,10 @@ export default defineEventHandler(async (event) => {
   const user = await prisma.users.create({
     data: {
       userId: body.userId,
-      stripeId: body.stripeId,
       name: body.name,
-      address: body.address,
-      zipcode: body.zipcode,
-      city: body.city,
-      country: body.country
+      email: body.address,
+      password: body.zipcode,
+      created_at: body.created_at
     }
   })
 
