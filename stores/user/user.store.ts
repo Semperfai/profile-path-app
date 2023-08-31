@@ -22,6 +22,28 @@ export const useUserStore = defineStore('user', {
   }),
   getters: {},
   actions: {
+    async hasSessionExpired() {
+      await $axios.interceptors.response.use(
+        (response: any) => {
+          return response
+        },
+        (error: any) => {
+          switch (error.response.status) {
+            case 401:
+            case 419:
+            case 503:
+              this.resetState()
+              window.location.href = '/'
+              break
+            case 500:
+              alert('Oops, something went wrong!  The team has been notified.')
+              break
+            default:
+              return Promise.reject(error)
+          }
+        }
+      )
+    },
     hidePageOverflow(val: boolean, id: string): void {
       let el: HTMLElement | null = null
 
@@ -45,7 +67,11 @@ export const useUserStore = defineStore('user', {
     },
     async getUser(id: UserId) {
       this.$state.id = id
-      console.log('getUser', id)
+      const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
+      console.log('getUser', user)
+    },
+    async createUser(data: any) {
+      console.log(data)
     },
     resetState() {
       this.$state.id = '' as UserId

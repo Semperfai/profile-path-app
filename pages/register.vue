@@ -57,9 +57,10 @@
 
 <script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
+import { useUserStore } from '~/stores/user/user.store'
 
 const supabase = useSupabaseClient()
-
+const useStorage = useUserStore()
 const user = useSupabaseUser()
 
 const name = ref<string>('')
@@ -89,7 +90,10 @@ const register = async () => {
   errors.value = ''
 
   try {
-    const { data, error } = await supabase.auth.signUp({
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.signUp({
       email: email.value,
       password: password.value,
       options: {
@@ -98,6 +102,10 @@ const register = async () => {
         }
       }
     })
+
+    if (user) {
+      await useStorage.createUser(user)
+    }
 
     if (error) {
       errors.value = error.message
