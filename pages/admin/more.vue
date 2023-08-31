@@ -32,6 +32,8 @@ const windowWidth = ref<number | string>(
   process.client ? window.innerWidth : ''
 )
 
+definePageMeta({ middleware: 'is-logged-out' })
+
 onMounted(() => {
   window.addEventListener('resize', function () {
     windowWidth.value = window.innerWidth

@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -10,3 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id         Int         @id @default(autoincrement())
+  userId     String      @db.Uuid 
+  email      String      @unique
+  password   String
+  name       String
+  links      Links[]     
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+}
+
+model Links {
+  id         Int         @id @default(autoincrement())
+  linksId    Int
+  user       User        @relation(fields: [linksId], references: [id])
+  linkItem   LinkItem[]
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+}
+
+model LinkItem {
+  id         Int         @id @default(autoincrement())
+  linkId     Int
+  name       String
+  url        String
+  image      String
+  link       Links       @relation(fields: [linkId], references: [id])
+  created_at DateTime?   @default(now()) @db.Timestamptz(6)
+}

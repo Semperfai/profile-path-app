@@ -58,6 +58,8 @@ import { links } from "~~/__mocks__/links";
 import { useUserStore } from "~~/stores/user/user.store";
 const userStore = useUserStore();
 
+definePageMeta({ middleware: 'is-logged-out' })
+
 const selectedInput = ref<{ id: number; str: string }>({ id: 0, str: "" });
 const showAddLink = ref<boolean>(false);
 
