@@ -22,6 +22,27 @@ export const useUserStore = defineStore('user', {
   }),
   getters: {},
   actions: {
+    hidePageOverflow(val: boolean, id: string): void {
+      let el: HTMLElement | null = null
+
+      el = document.getElementById(id)
+
+      if (val) {
+        document.body.style.overflow = 'hidden'
+        if (id && el) {
+          el.style.overflow = 'hidden'
+        }
+        return
+      }
+
+      document.body.style.overflow = 'visible'
+      if (id && el) {
+        el.style.overflow = 'hidden'
+      }
+    },
+    allLowerCaseNoCaps(str: string): string {
+      return str.split(' ').join('').toLowerCase()
+    },
     async getUser(id: UserId) {
       this.$state.id = id
       console.log('getUser', id)
