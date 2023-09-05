@@ -58,6 +58,7 @@
 <script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
 import { useUserStore } from '~/stores/user/user.store'
+import { mapUser } from '~/entities/user/lib/mapUser'
 
 const supabase = useSupabaseClient()
 const useStorage = useUserStore()
@@ -104,7 +105,7 @@ const register = async () => {
     })
 
     if (user) {
-      await useStorage.createUser(user)
+      await useStorage.createUser(mapUser(user))
     }
 
     if (error) {

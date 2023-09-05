@@ -66,8 +66,10 @@ export const useUserStore = defineStore('user', {
       return str.split(' ').join('').toLowerCase()
     },
     async getUser(id: UserId) {
-      this.$state.id = id
       const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
+      if (user) {
+        this.$state.id = id
+      }
       console.log('getUser', user)
     },
     async createUser(user: any) {
