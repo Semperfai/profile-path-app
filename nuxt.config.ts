@@ -19,6 +19,9 @@ export default defineNuxtConfig({
     '@vite-pwa/nuxt',
     '@nuxtjs/supabase'
   ],
+  runtimeConfig: {
+    apiBase: ''
+  },
   supabase: {
     redirect: false
     // redirectOptions: {
