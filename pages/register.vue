@@ -106,6 +106,7 @@ const register = async () => {
 
     if (user) {
       await useStorage.createUser(mapUser(user))
+      navigateTo('/admin')
     }
 
     if (error) {
@@ -116,10 +117,4 @@ const register = async () => {
     console.log(error)
   }
 }
-
-watchEffect(() => {
-  if (user.value) {
-    navigateTo('/admin')
-  }
-})
 </script>

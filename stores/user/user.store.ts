@@ -68,15 +68,19 @@ export const useUserStore = defineStore('user', {
     },
 
     async createUser(user: any) {
-      console.log(user)
-      const newUser = await $axios.post('/api/prisma/create-user', user)
+      const {
+        data: { userId }
+      } = await $axios.post('/api/prisma/create-user', user)
+
+      await this.getUser(userId)
     },
     async getUser(id: UserId) {
       const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
       if (user) {
-        this.$state.id = id
+        this.$state.id = user.data.userId
+        this.$state.name = user.data.name
+        this.$state.email = user.data.email
       }
-      console.log('getUser', user)
     },
     resetState() {
       this.$state.id = '' as UserId
