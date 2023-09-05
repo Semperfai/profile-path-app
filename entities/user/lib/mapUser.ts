@@ -1,12 +1,11 @@
-import { type UserDto } from '../api/types'
-import { type IUser } from '../model/types'
+import { type IUser, UserId } from '../model/types'
+import type { User } from '@supabase/gotrue-js/dist/module/lib/types.d.ts'
 
-export function mapUser<T extends UserDto>(dto: T): IUser {
+export function mapUser(dto: User): IUser {
   return {
-    userId: dto.id,
+    userId: dto.id as UserId,
     email: dto.email,
-    name: dto.user_metadata.name,
-    password: dto.password,
+    name: dto.user_metadata?.name,
     created_at: dto.created_at
   }
 }

@@ -93,6 +93,6 @@ export const useUserStore = defineStore('user', {
       this.$state.addLinkOverlay = false
       this.$state.isPreviewOverlay = false
     }
-  },
-  persist: true
+  }
+  // persist: true
 })
