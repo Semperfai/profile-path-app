@@ -30,6 +30,8 @@ declare global {
   export type Url = string
 
   export type Color = string
+
+  export type StringOrNumber = string | number
 }
 
 export {}
