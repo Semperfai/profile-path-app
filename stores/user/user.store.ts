@@ -72,12 +72,11 @@ export const useUserStore = defineStore('user', {
         data: { userId }
       } = await $axios.post('/api/prisma/create-user', user)
 
-      await this.getUser(userId)
+      this.getUser(userId)
     },
     async getUser(id: UserId) {
       const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
-      if (user) {
-        this.$state.id = user.data.userId
+      if (user && this.$state.id === user.data.id) {
         this.$state.name = user.data.name
         this.$state.email = user.data.email
       }

@@ -74,12 +74,12 @@ const login = async () => {
 
     //todo await userStore.getAllLinks() we need this? we can implement this in store?
 
-    await userStore.getUser(user.value.id)
-
     if (error) {
       errors.value = error.message
       return
     }
+
+    await userStore.getUser(user.value.id)
   } catch (error) {
     console.log(error)
   }
@@ -89,6 +89,7 @@ watch(
   user,
   () => {
     if (user.value) {
+      userStore.id = user.value.id
       router.push('/admin')
     }
   },

@@ -61,8 +61,9 @@ import { useUserStore } from '~/stores/user/user.store'
 import { mapUser } from '~/entities/user/lib/mapUser'
 
 const supabase = useSupabaseClient()
-const useStorage = useUserStore()
+const userStore = useUserStore()
 const user = useSupabaseUser()
+const router = useRouter()
 
 const name = ref<string>('')
 const email = ref<string>('')
@@ -105,7 +106,7 @@ const register = async () => {
     })
 
     if (user) {
-      await useStorage.createUser(mapUser(user))
+      await userStore.createUser(mapUser(user))
       navigateTo('/admin')
     }
 
@@ -117,4 +118,15 @@ const register = async () => {
     console.log(error)
   }
 }
+
+watch(
+  user,
+  () => {
+    if (user.value) {
+      userStore.id = user.value.id
+      router.push('/admin')
+    }
+  },
+  { immediate: true }
+)
 </script>
