@@ -8,8 +8,8 @@ export default defineEventHandler(async (event) => {
     data: {
       userId: body.userId,
       name: body.name,
-      email: body.address,
-      password: body.zipcode,
+      email: body.email,
+      password: body.password,
       created_at: body.created_at
     }
   })

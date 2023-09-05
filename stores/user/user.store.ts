@@ -1,6 +1,7 @@
 import axios from '~/plugins/axios'
 import { defineStore } from 'pinia'
-import type { UserState, UserId } from './types'
+import type { UserState } from './types'
+import type { UserId } from '~/entities/user/model/types'
 
 const $axios = axios().provide.axios
 
@@ -65,15 +66,17 @@ export const useUserStore = defineStore('user', {
     allLowerCaseNoCaps(str: string): string {
       return str.split(' ').join('').toLowerCase()
     },
+
+    async createUser(user: any) {
+      console.log(user)
+      const newUser = await $axios.post('/api/prisma/create-user', user)
+    },
     async getUser(id: UserId) {
       const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
       if (user) {
         this.$state.id = id
       }
       console.log('getUser', user)
-    },
-    async createUser(user: any) {
-      console.log(user)
     },
     resetState() {
       this.$state.id = '' as UserId
