@@ -20,7 +20,9 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase'
   ],
   runtimeConfig: {
-    apiBase: ''
+    public: {
+      apiBase: process.env.API_BASE
+    }
   },
   supabase: {
     redirect: false
