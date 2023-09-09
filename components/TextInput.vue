@@ -1,22 +1,38 @@
 <template>
   <div>
     <client-only>
-      <input
-        :type="inputType"
-        :maxlength="max"
-        :placeholder="placeholder"
-        @focus="isFocused = true"
-        @blur="isFocused = false"
-        class="w-full bg-white text-gray-800 border text-sm border-[#EFF0EB] rounded-lg p-3 placeholder-gray-500 focus:outline-none hover:bg-slate-100"
-        :class="[
-          isFocused ? 'border-gray-900' : '',
-          error ? 'border-red-500' : '',
-        ]"
-        v-model="inputComputed"
-        autocomplete="off"
-      />
-      <span v-if="error" class="text-red-500 text-[14px] font-semibold">
-        {{ error }}
+      <div class="relative">
+        <input
+          :type="inputType"
+          :maxlength="max"
+          :placeholder="placeholder"
+          @focus="isFocused = true"
+          @blur="isFocused = false"
+          class="w-full bg-white text-gray-800 border text-sm border-[#EFF0EB] rounded-lg p-3 placeholder-gray-500 focus:outline-none hover:bg-slate-100"
+          :class="[
+            isFocused ? 'border-gray-900' : '',
+            error ? 'border-red-500' : '',
+          ]"
+          v-model="inputComputed"
+          autocomplete="off"
+        />
+        <Icon
+          v-if="!validation?.$invalid || validation?.$error"
+          class="absolute right-2 h-full text-xl text-green-500"
+          :class="{
+            'text-green-500': !validation?.$invalid,
+            'text-yellow-500': validation?.$error,
+          }"
+          :name="`heroicons-solid:${
+            !validation?.$error ? 'check-circle' : 'exclamation'
+          }`"
+        />
+      </div>
+      <span
+        v-if="validation?.$error"
+        class="text-red-500 text-[14px] font-semibold"
+      >
+        {{ validation.$errors[0].$message }}
       </span>
     </client-only>
   </div>
@@ -38,8 +54,8 @@ const props = defineProps({
     type: String,
     default: "text",
   },
-  error: {
-    type: String,
+  validation: {
+    type: Object,
     default: null,
   },
   max: {

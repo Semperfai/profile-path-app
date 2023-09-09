@@ -9,31 +9,37 @@
         <div>
           <TextInput
             placeholder="Username"
-            v-model:input="name"
-            inputType="text" />
+            v-model:input="formData.name"
+            inputType="text"
+            :validation="v$.name"
+          />
         </div>
 
         <div class="mt-4">
           <TextInput
             placeholder="Email: link@gmail.com"
-            v-model:input="email"
+            v-model:input="formData.email"
             inputType="email"
-            :error="errors && errors.includes('Email') ? errors : ''" />
+            :validation="v$.email"
+          />
         </div>
 
         <div class="mt-4">
           <TextInput
             placeholder="Password"
-            v-model:input="password"
+            v-model:input="formData.password"
             inputType="password"
-            :error="errors && errors?.includes('Password') ? errors : ''" />
+            :validation="v$.password"
+          />
         </div>
 
         <div class="mt-4">
           <TextInput
             placeholder="Confirm Password"
-            v-model:input="confirmPassword"
-            inputType="password" />
+            v-model:input="formData.confirmPassword"
+            inputType="password"
+            :validation="v$.confirmPassword"
+          />
         </div>
 
         <div class="mt-10">
@@ -41,7 +47,8 @@
             type="submit"
             class="rounded-full w-full p-3 font-bold transition-all duration-300 ease-linear"
             :disabled="submitDisabled"
-            :class="submitButtonState">
+            :class="submitButtonState"
+          >
             Create account
           </button>
         </div>
@@ -56,77 +63,119 @@
 </template>
 
 <script setup lang="ts">
-import AuthLayout from '~/layouts/AuthLayout.vue'
-import { useUserStore } from '~/stores/user/user.store'
-import { mapUser } from '~/entities/user/lib/mapUser'
+import AuthLayout from "~/layouts/AuthLayout.vue";
+import { useUserStore } from "~/stores/user/user.store";
+import { mapUser } from "~/entities/user/lib/mapUser";
+import { useVuelidate } from "@vuelidate/core";
+import {
+  required,
+  email,
+  sameAs,
+  minLength,
+  helpers,
+} from "@vuelidate/validators";
 
-const supabase = useSupabaseClient()
-const userStore = useUserStore()
-const user = useSupabaseUser()
-const router = useRouter()
+const supabase = useSupabaseClient();
+const userStore = useUserStore();
+const user = useSupabaseUser();
+const router = useRouter();
 
-const name = ref<string>('')
-const email = ref<string>('')
-const password = ref<string>('')
-const confirmPassword = ref<string>('')
-const errors = ref<string>('')
+const formData = reactive({
+  name: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+});
+
+const rules = computed(() => {
+  return {
+    name: {
+      required: helpers.withMessage("The name field is required", required),
+      minLength: minLength(3),
+    },
+    email: {
+      required: helpers.withMessage("The email field is required", required),
+      email: helpers.withMessage("Invalid email format", email),
+    },
+    password: {
+      required: helpers.withMessage("The password field is required", required),
+      minLength: minLength(6),
+    },
+    confirmPassword: {
+      required: helpers.withMessage(
+        "The password confirmation field is required",
+        required
+      ),
+      sameAs: helpers.withMessage(
+        "Passwords don't match",
+        sameAs(formData.password)
+      ),
+    },
+  };
+});
+
+const v$ = useVuelidate(rules, formData);
+
+const errors = ref<string>("");
 
 const submitDisabled = computed(() => {
+  v$.value.$validate();
   return (
-    !name.value ||
-    !email.value ||
-    !password.value ||
-    !confirmPassword.value ||
-    password.value !== confirmPassword.value
-  )
-})
+    !formData.name ||
+    !formData.email ||
+    !formData.email ||
+    !formData.confirmPassword ||
+    formData.password !== formData.confirmPassword ||
+    v$.value.$error
+  );
+});
 
 const submitButtonState = computed(() => {
   return {
-    'bg-[#EFF0EB] text-[#A7AAA2]': submitDisabled.value,
-    'bg-[#8228D9] hover:bg-[#6c21b3] text-white': !submitDisabled.value
-  }
-})
+    "bg-[#EFF0EB] text-[#A7AAA2]": submitDisabled.value,
+    "bg-[#8228D9] hover:bg-[#6c21b3] text-white": !submitDisabled.value,
+  };
+});
 
 const register = async () => {
-  errors.value = ''
+  errors.value = "";
 
   try {
     const {
       data: { user },
-      error
+      error,
     } = await supabase.auth.signUp({
-      email: email.value,
-      password: password.value,
+      email: formData.email,
+      password: formData.password,
       options: {
         data: {
-          name: name.value
-        }
-      }
-    })
+          name: formData.name,
+        },
+      },
+    });
 
     if (user) {
-      await userStore.createUser(mapUser(user))
-      navigateTo('/admin')
+      await userStore.createUser(mapUser(user));
+      navigateTo("/admin");
     }
 
     if (error) {
-      errors.value = error.message
-      return
+      errors.value = error.message;
+      return;
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 
 watch(
   user,
   () => {
     if (user.value) {
-      userStore.id = user.value.id
-      router.push('/admin')
+      userStore.id = user.value.id;
+      router.push("/admin");
     }
   },
   { immediate: true }
-)
+);
 </script>
