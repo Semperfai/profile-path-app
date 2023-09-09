@@ -29,10 +29,10 @@
         />
       </div>
       <span
-        v-if="validation?.$error"
+        v-if="validation?.$error || serverErrors"
         class="text-red-500 text-[14px] font-semibold"
       >
-        {{ validation.$errors[0].$message }}
+        {{ validation?.$errors[0]?.$message || serverErrors }}
       </span>
     </client-only>
   </div>
@@ -57,6 +57,10 @@ const props = defineProps({
   validation: {
     type: Object,
     default: null,
+  },
+  serverErrors: {
+    type: String,
+    default: "",
   },
   max: {
     type: Number,

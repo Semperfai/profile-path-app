@@ -12,6 +12,7 @@
             :validation="v$.email"
             placeholder="Email: link@gmail.com"
             inputType="email"
+            :server-errors="serverErrors"
           />
         </div>
 
@@ -21,6 +22,7 @@
             v-model:input="formData.password"
             inputType="password"
             :validation="v$.password"
+            :server-errors="serverErrors"
           />
         </div>
 
@@ -28,9 +30,9 @@
           <button
             type="submit"
             class="rounded-full w-full p-3 font-bold transition-all duration-300 ease-linear"
-            :disabled="!formData.email || !formData.password"
+            :disabled="submitLogin"
             :class="
-              formData.email && formData.password
+              formData.email && formData.password && !v$.$error
                 ? 'bg-[#8228D9] hover:bg-[#6c21b3] text-white'
                 : 'bg-[#EFF0EB] text-[#A7AAA2]'
             "
@@ -63,13 +65,13 @@ const formData = reactive({
   password: "",
 });
 
-const error = ref<string>("");
+const serverErrors = ref<string>("");
 
 const rules = computed(() => {
   return {
     email: {
-      required: helpers.withMessage("The name field is required", required),
-      minLength: minLength(3),
+      required: helpers.withMessage("The email field is required", required),
+      email: helpers.withMessage("Invalid email format", email),
     },
     password: {
       required: helpers.withMessage("The password field is required", required),
@@ -88,8 +90,14 @@ definePageMeta({
   middleware: "is-logged-in",
 });
 
+const submitLogin = computed(() => {
+  v$.value.$validate();
+  return !formData.email || !formData.password || v$.value.$error;
+});
+
 const login = async () => {
-  error.value = "";
+  serverErrors.value = "";
+
   try {
     const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
@@ -99,7 +107,10 @@ const login = async () => {
     //todo await userStore.getAllLinks() we need this? we can implement this in store?
 
     if (error) {
-      throw error;
+      serverErrors.value = error.message;
+      setTimeout(() => {
+        serverErrors.value = "";
+      }, 2000);
       return;
     }
 
