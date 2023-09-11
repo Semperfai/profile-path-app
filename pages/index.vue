@@ -12,6 +12,7 @@
             inputType="email"
             placeholder="Email: link@gmail.com"
             :validation="v$.email"
+            @server-errors-state="handleServerErrorsState"
             :server-errors="serverErrors" />
         </div>
 
@@ -21,6 +22,7 @@
             inputType="password"
             placeholder="Password"
             :validation="v$.password"
+            @server-errors-state="handleServerErrorsState"
             :server-errors="serverErrors" />
         </div>
 
@@ -105,9 +107,6 @@ const login = async () => {
 
     if (error) {
       serverErrors.value = error.message
-      setTimeout(() => {
-        serverErrors.value = ''
-      }, 2000)
       return
     }
 
@@ -115,6 +114,10 @@ const login = async () => {
   } catch (error) {
     console.log(error)
   }
+}
+
+const handleServerErrorsState = () => {
+  serverErrors.value = ''
 }
 
 watch(

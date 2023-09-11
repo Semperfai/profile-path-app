@@ -15,17 +15,16 @@
             'border-green-500': normalState
           }"
           v-model="inputComputed"
-          @input="shouldValidate = true"
           autocomplete="off" />
         <Icon
           v-if="shouldValidate"
           class="absolute right-2 h-full text-xl text-green-500"
           :class="{
-            'text-green-500': !validation?.$invalid,
-            'text-yellow-500': validation?.$error
+            'text-green-500': normalState,
+            'text-yellow-500': errorState
           }"
           :name="`heroicons-solid:${
-            !validation?.$error ? 'check-circle' : 'exclamation'
+            !errorState ? 'check-circle' : 'exclamation'
           }`" />
       </div>
       <span v-if="errorState" class="text-red-500 text-[14px] font-semibold">
@@ -36,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['update:input'])
+const emit = defineEmits(['update:input', 'server-errors-state'])
 
 const props = defineProps({
   input: {
@@ -85,6 +84,10 @@ const normalState = computed(() => {
 
 const inputComputed = computed({
   get: () => input.value,
-  set: (value) => emit('update:input', value)
+  set: (value) => {
+    shouldValidate.value = true
+    emit('server-errors-state')
+    emit('update:input', value)
+  }
 })
 </script>

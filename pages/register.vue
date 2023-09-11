@@ -11,6 +11,8 @@
             placeholder="Username"
             v-model:input="formData.name"
             inputType="text"
+            :server-errors="serverErrors"
+            @server-errors-state="handleServerErrorsState"
             :validation="v$.name" />
         </div>
 
@@ -20,6 +22,7 @@
             v-model:input="formData.email"
             inputType="email"
             :validation="v$.email"
+            @server-errors-state="handleServerErrorsState"
             :server-errors="serverErrors" />
         </div>
 
@@ -29,6 +32,7 @@
             v-model:input="formData.password"
             inputType="password"
             :validation="v$.password"
+            @server-errors-state="handleServerErrorsState"
             :server-errors="serverErrors" />
         </div>
 
@@ -37,6 +41,8 @@
             placeholder="Confirm Password"
             v-model:input="formData.confirmPassword"
             inputType="password"
+            @server-errors-state="handleServerErrorsState"
+            :server-errors="serverErrors"
             :validation="v$.confirmPassword" />
         </div>
 
@@ -135,6 +141,10 @@ const submitButtonState = computed(() => {
     'bg-[#8228D9] hover:bg-[#6c21b3] text-white': !submitDisabled.value
   }
 })
+
+const handleServerErrorsState = () => {
+  serverErrors.value = ''
+}
 
 const register = async () => {
   serverErrors.value = ''
