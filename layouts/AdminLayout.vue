@@ -10,7 +10,7 @@
           <NuxtLink to="/admin">
             <img
               class="w-[23px] min-w-[23px] select-none"
-              :src="userStore.image" />
+              src="../assets/images/logo.png" />
           </NuxtLink>
 
           <div v-for="link in links" class="lg:px-2.5 px-0.5 md:block hidden">

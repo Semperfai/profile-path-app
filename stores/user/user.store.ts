@@ -11,7 +11,7 @@ export const useUserStore = defineStore('user', {
     theme_id: -1,
     name: '',
     email: '',
-    image: '',
+    image: 'https://picsum.photos/id/4/300/320',
     bio: '',
     theme: null,
     colors: [],
