@@ -149,6 +149,10 @@ const updateUserDetails = useDebounce(async () => {
 const updateUserImage = async () => {
   try {
     await userStore.updateUserImage(data.value)
+    await userStore.getUser()
+    setTimeout(() => {
+      openCropper.value = false
+    }, 300)
   } catch (error) {
     openCropper.value = false
     alert(error)
