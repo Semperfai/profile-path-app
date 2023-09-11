@@ -30,7 +30,7 @@ const show = ref<boolean>(false)
 const bgIsGray = ref<boolean>(false)
 
 const setColors = () => {
-  return THEME_COLORS
+  return [...THEME_COLORS]
 }
 
 const checkPath = (path: string) => {
