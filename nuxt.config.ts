@@ -32,30 +32,30 @@ export default defineNuxtConfig({
     //   exclude: []
     // }
   },
-  // pwa: {
-  //   manifest: {
-  //     name: 'Linktree Clone',
-  //     short_name: 'Linktree Clone',
-  //     description: 'This is a Linktree Clone',
-  //     theme_color: '#32CD32',
-  //     icons: [
-  //       {
-  //         src: 'pwa-192x192.png',
-  //         sizes: '192x192',
-  //         type: 'image/png'
-  //       },
-  //       {
-  //         src: 'pwa-512x512.png',
-  //         sizes: '512x512',
-  //         type: 'image/png'
-  //       }
-  //     ]
-  //   },
-  //   devOptions: {
-  //     enabled: true,
-  //     type: 'module'
-  //   }
-  // },
+  pwa: {
+    manifest: {
+      name: 'Linktree Clone',
+      short_name: 'Linktree Clone',
+      description: 'This is a Linktree Clone',
+      theme_color: '#32CD32',
+      icons: [
+        {
+          src: 'pwa-192x192.png',
+          sizes: '192x192',
+          type: 'image/png'
+        },
+        {
+          src: 'pwa-512x512.png',
+          sizes: '512x512',
+          type: 'image/png'
+        }
+      ]
+    },
+    devOptions: {
+      enabled: true,
+      type: 'module'
+    }
+  },
   app: {
     head: {
       charset: 'utf-8',

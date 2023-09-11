@@ -15,9 +15,7 @@
 
             <div class="w-full bg-white rounded-3xl p-6">
               <div class="flex items-center justify-between gap-4">
-                <img
-                  class="rounded-full w-[90px]"
-                  src="https://picsum.photos/id/44/300/320" />
+                <img class="rounded-full w-[90px]" :src="userStore.image" />
 
                 <div class="w-full">
                   <button

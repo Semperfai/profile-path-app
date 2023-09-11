@@ -2,7 +2,7 @@
   <VitePwaManifest />
   <BaseMask v-if="bgIsGray" />
 
-  <NuxtPage />
+  <NuxtPage v-if="show" />
 
   <UpdateLinkOverlay v-if="isMobile && updatedLinkId" />
   <AddLinkOverlay v-if="isMobile && addLinkOverlay" />
@@ -88,5 +88,9 @@ onMounted(() => {
   if ('ontouchstart' in window) {
     isMobile.value = true
   }
+
+  setTimeout(() => {
+    show.value = true
+  }, 1)
 })
 </script>

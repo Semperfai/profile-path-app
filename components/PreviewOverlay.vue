@@ -47,18 +47,18 @@
         <div class="h-full mx-auto w-full overflow-auto z-10">
           <img
             class="rounded-full min-w-[100px] w-[100px] mx-auto"
-            src="https://picsum.photos/id/23/300/320" />
+            :src="userStore.image" />
 
           <div
             class="text-center text-xl font-semibold mt-4"
             :class="userStore.theme?.text">
-            @svyatmatyuha
+            @{{ userStore.allLowerCaseNoCaps(userStore.name) }}
           </div>
 
           <div
             class="text-center font-light mt-2"
             :class="userStore.theme?.text">
-            <div class="px-8">{{userStore.bio }}</div>
+            <div class="px-8">{{ userStore.bio }}</div>
           </div>
 
           <div v-for="link in userStore.allLinks">
@@ -68,7 +68,7 @@
               class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg">
               <img
                 class="rounded-lg h-[45px] aspect-square"
-                src="https://picsum.photos/id/8/300/320" />
+                :src="userStore.image" />
 
               <div class="absolute text-[16px] text-center w-full">
                 {{ link.name }}

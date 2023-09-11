@@ -10,7 +10,7 @@
           <NuxtLink to="/admin">
             <img
               class="w-[23px] min-w-[23px] select-none"
-              src="~/assets/images/logo.png" />
+              :src="userStore.image" />
           </NuxtLink>
 
           <div
@@ -62,7 +62,7 @@
             class="rounded-full md:block hidden">
             <img
               class="rounded-full min-w-[40px] w-[40px]"
-              src="https://picsum.photos/id/8/300/320" />
+              :src="userStore.image" />
           </button>
         </div>
       </div>
@@ -85,7 +85,7 @@
         class="flex items-center justify-between gap-4 shadow-sm bg-white w-full"
         :class="route">
         <div class="flex w-full">
-          <div v-for="link in userStore.allLinksSecondaryNav" class="w-1/4">
+          <div v-for="link in linksSecondaryNav" class="w-1/4">
             <NuxtLink
               :to="link.url"
               class="relative flex justify-center border-t-black text-sm w-full h-full font-semibold px-1.5 my-[1px] py-[1px] hover:bg-gray-100"
@@ -168,7 +168,7 @@
     class="fixed z-20 bottom-0 flex w-full bg-white shadow-[0_35px_60px_10px_rgba(0,0,0,0.4)]"
     :class="userStore.isMobile ? 'h-[70px]' : 'h-[60px]'">
     <div class="flex w-full">
-      <div v-for="link in userStore.allLinksMobile" class="w-1/5">
+      <div v-for="link in linksMobile" class="w-1/5">
         <button
           class="relative flex justify-center text-sm w-full h-full font-semibold px-1.5 py-1 hover:bg-gray-100"
           :class="
@@ -219,17 +219,6 @@ const windowWidth = ref<number | string>(
 )
 const isSecondaryTopNav = ref<boolean>(false)
 
-const links = ref<NavbarLink[]>([
-  { name: 'Links', url: '/admin', icon: 'icon-park-outline:hamburger-button' },
-  {
-    name: 'Apperance',
-    url: '/admin/apperance',
-    icon: 'fluent:shapes-48-regular'
-  },
-  { name: 'Analytics', url: '/', icon: 'tabler:brand-google-analytics' },
-  { name: 'Settings', url: '/', icon: 'material-symbols:settings' }
-])
-
 const linksSecondaryNav = ref<NavbarLink[]>([
   { name: 'Links', url: '/admin', icon: 'icon-park-outline:hamburger-button' },
   {
@@ -242,7 +231,7 @@ const linksSecondaryNav = ref<NavbarLink[]>([
     name: 'More',
     url: '/admin/more',
     icon: '',
-    img: 'https://picsum.photos/id/8/300/320'
+    img: userStore.image
   }
 ])
 

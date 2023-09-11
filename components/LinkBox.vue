@@ -162,9 +162,7 @@
       </div>
 
       <div class="w-full flex items-center justify-between px-4 py-5">
-        <img
-          class="rounded-lg w-[80px] aspect-square"
-          src="https://picsum.photos/id/8/300/320" />
+        <img class="rounded-lg w-[80px] aspect-square" :src="link.image" />
 
         <div class="w-full pl-3">
           <button
@@ -187,6 +185,7 @@
 import { useUserStore } from '~~/stores/user/user.store'
 import { storeToRefs } from 'pinia'
 import { type Link } from '~~/shared/types'
+import { ICropperFormDataFields } from '~~/components/types/cropper-modal'
 const userStore = useUserStore()
 const { isMobile, updatedLinkId } = storeToRefs(userStore)
 
@@ -206,7 +205,7 @@ const emit = defineEmits(['updatedInput'])
 
 const name = ref<string>('')
 const url = ref<Url>('')
-const data = ref(null)
+const data = ref<ICropperFormDataFields | null>(null)
 const isDelete = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
 const isUploadImage = ref<boolean>(false)
