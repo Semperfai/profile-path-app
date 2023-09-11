@@ -9,21 +9,19 @@
         <div>
           <TextInput
             v-model:input="formData.email"
-            :validation="v$.email"
-            placeholder="Email: link@gmail.com"
             inputType="email"
-            :server-errors="serverErrors"
-          />
+            placeholder="Email: link@gmail.com"
+            :validation="v$.email"
+            :server-errors="serverErrors" />
         </div>
 
         <div class="mt-4">
           <TextInput
-            placeholder="Password"
             v-model:input="formData.password"
             inputType="password"
+            placeholder="Password"
             :validation="v$.password"
-            :server-errors="serverErrors"
-          />
+            :server-errors="serverErrors" />
         </div>
 
         <div class="mt-10">
@@ -35,16 +33,15 @@
               formData.email && formData.password && !v$.$error
                 ? 'bg-[#8228D9] hover:bg-[#6c21b3] text-white'
                 : 'bg-[#EFF0EB] text-[#A7AAA2]'
-            "
-          >
+            ">
             Log in
           </button>
         </div>
       </form>
 
-      <div class="text-[14px] text-center pt-12">
+      <div class="text-xl text-center pt-12">
         Don't have an account?
-        <NuxtLink to="/register" class="text-[#8228D9] underline">
+        <NuxtLink to="/register" class="text-[#8228D9] underline font-bold">
           Sign up
         </NuxtLink>
       </div>
@@ -53,81 +50,81 @@
 </template>
 
 <script setup lang="ts">
-import AuthLayout from "~/layouts/AuthLayout.vue";
-import { useUserStore } from "~/stores/user/user.store";
-import { useVuelidate } from "@vuelidate/core";
-import { required, helpers, minLength, email } from "@vuelidate/validators";
+import AuthLayout from '~/layouts/AuthLayout.vue'
+import { useUserStore } from '~/stores/user/user.store'
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers, minLength, email } from '@vuelidate/validators'
 
-const userStore = useUserStore();
+const userStore = useUserStore()
 
 const formData = reactive({
-  email: "",
-  password: "",
-});
+  email: '',
+  password: ''
+})
 
-const serverErrors = ref<string>("");
+const serverErrors = ref<string>('')
 
 const rules = computed(() => {
   return {
     email: {
-      required: helpers.withMessage("The email field is required", required),
-      email: helpers.withMessage("Invalid email format", email),
+      required: helpers.withMessage('The email field is required', required),
+      email: helpers.withMessage('Invalid email format', email)
     },
     password: {
-      required: helpers.withMessage("The password field is required", required),
-      minLength: minLength(6),
-    },
-  };
-});
+      required: helpers.withMessage('The password field is required', required),
+      minLength: minLength(6)
+    }
+  }
+})
 
-const v$ = useVuelidate(rules, formData);
+const v$ = useVuelidate(rules, formData)
 
-const supabase = useSupabaseClient();
-const user = useSupabaseUser();
-const router = useRouter();
+const supabase = useSupabaseClient()
+const user = useSupabaseUser()
+const router = useRouter()
 
 definePageMeta({
-  middleware: "is-logged-in",
-});
+  middleware: 'is-logged-in'
+})
 
 const submitLogin = computed(() => {
-  v$.value.$validate();
-  return !formData.email || !formData.password || v$.value.$error;
-});
+  v$.value.$validate()
+  return !formData.email || !formData.password || v$.value.$error
+})
 
 const login = async () => {
-  serverErrors.value = "";
+  serverErrors.value = ''
 
   try {
     const { error } = await supabase.auth.signInWithPassword({
       email: formData.email,
-      password: formData.password,
-    });
+      password: formData.password
+    })
 
     //todo await userStore.getAllLinks() we need this? we can implement this in store?
 
     if (error) {
-      serverErrors.value = error.message;
+      serverErrors.value = error.message
       setTimeout(() => {
-        serverErrors.value = "";
-      }, 2000);
-      return;
+        serverErrors.value = ''
+      }, 2000)
+      return
     }
 
-    await userStore.getUser(user.value.id);
+    await userStore.getUser(user.value.id)
   } catch (error) {
-    console.log(error);
+    console.log(error)
   }
-};
+}
 
 watch(
   user,
   () => {
     if (user.value) {
-      userStore.id = user.value.id;
-      router.push("/admin");
+      userStore.id = user.value.id
+      router.push('/admin')
     }
   },
   { immediate: true }
-);
+)
 </script>

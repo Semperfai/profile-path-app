@@ -8,72 +8,83 @@
           :placeholder="placeholder"
           @focus="isFocused = true"
           @blur="isFocused = false"
-          class="w-full bg-white text-gray-800 border text-sm border-[#EFF0EB] rounded-lg p-3 placeholder-gray-500 focus:outline-none hover:bg-slate-100"
-          :class="[
-            isFocused ? 'border-gray-900' : '',
-            error ? 'border-red-500' : '',
-          ]"
+          class="w-full bg-white text-gray-800 border text-sm border-[#EFF0EB] rounded-lg px-7 py-3 placeholder-gray-500 focus:outline-none hover:bg-slate-100"
+          :class="{
+            'border-gray-900': isFocused,
+            'border-red-500': errorState,
+            'border-green-500': normalState
+          }"
           v-model="inputComputed"
-          autocomplete="off"
-        />
+          @input="shouldValidate = true"
+          autocomplete="off" />
         <Icon
-          v-if="!validation?.$invalid || validation?.$error"
+          v-if="shouldValidate"
           class="absolute right-2 h-full text-xl text-green-500"
           :class="{
             'text-green-500': !validation?.$invalid,
-            'text-yellow-500': validation?.$error,
+            'text-yellow-500': validation?.$error
           }"
           :name="`heroicons-solid:${
             !validation?.$error ? 'check-circle' : 'exclamation'
-          }`"
-        />
+          }`" />
       </div>
-      <span
-        v-if="validation?.$error || serverErrors"
-        class="text-red-500 text-[14px] font-semibold"
-      >
+      <span v-if="errorState" class="text-red-500 text-[14px] font-semibold">
         {{ validation?.$errors[0]?.$message || serverErrors }}
       </span>
     </client-only>
   </div>
 </template>
 
-<script setup>
-const emit = defineEmits(["update:input"]);
+<script setup lang="ts">
+const emit = defineEmits(['update:input'])
 
 const props = defineProps({
   input: {
     type: String,
-    default: "",
+    default: ''
   },
   placeholder: {
     type: String,
-    default: "",
+    default: ''
   },
   inputType: {
     type: String,
-    default: "text",
+    default: 'text'
   },
   validation: {
     type: Object,
-    default: null,
+    default: null
   },
   serverErrors: {
     type: String,
-    default: "",
+    default: ''
   },
   max: {
     type: Number,
-    default: 255,
-  },
-});
+    default: 255
+  }
+})
 
-const { input, placeholder, inputType, error, max } = toRefs(props);
+const { input, placeholder, inputType, serverErrors, max, validation } =
+  toRefs(props)
 
-const isFocused = ref(false);
+const isFocused = ref<boolean>(false)
+const shouldValidate = ref<boolean>(false)
+
+const errorState = computed(() => {
+  return (
+    (validation?.value?.$error || serverErrors.value) && shouldValidate.value
+  )
+})
+
+const normalState = computed(() => {
+  return (
+    !validation?.value?.$error && !serverErrors.value && shouldValidate.value
+  )
+})
 
 const inputComputed = computed({
   get: () => input.value,
-  set: (value) => emit("update:input", value),
-});
+  set: (value) => emit('update:input', value)
+})
 </script>
