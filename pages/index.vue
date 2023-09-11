@@ -110,7 +110,9 @@ const login = async () => {
       return
     }
 
-    await userStore.getUser(user.value.id)
+    userStore.id = user.value.id
+
+    await userStore.getUser()
   } catch (error) {
     console.log(error)
   }

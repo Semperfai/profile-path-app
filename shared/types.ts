@@ -19,6 +19,13 @@ export type Link = {
   image?: string
 }
 
+export type Theme = {
+  id: number
+  color: string
+  text: string
+  name: string
+}
+
 export const optionsVariants = [
   'Links',
   'Apperance',

@@ -9,7 +9,6 @@ export default defineEventHandler(async (event) => {
       userId: body.userId,
       name: body.name,
       email: body.email,
-      password: body.password,
       created_at: body.created_at
     }
   })

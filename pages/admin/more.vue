@@ -23,9 +23,9 @@
 <script setup lang="ts">
 import AdminLayout from '~~/layouts/AdminLayout.vue'
 import { useUserStore } from '~~/stores/user/user.store'
+
 const userStore = useUserStore()
 const router = useRouter()
-
 const supabase = useSupabaseClient()
 
 const windowWidth = ref<number | string>(

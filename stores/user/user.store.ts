@@ -1,14 +1,14 @@
 import axios from '~/plugins/axios'
 import { defineStore } from 'pinia'
 import type { UserState } from './types'
-import type { UserId } from '~/entities/user/model/types'
+import type { UserId, IUser } from '~/entities/user/model/types'
 
 const $axios = axios().provide.axios
 
 export const useUserStore = defineStore('user', {
   state: (): UserState => ({
     id: '' as UserId,
-    theme_id: '',
+    theme_id: -1,
     name: '',
     email: '',
     image: '',
@@ -66,20 +66,69 @@ export const useUserStore = defineStore('user', {
     allLowerCaseNoCaps(str: string): string {
       return str.split(' ').join('').toLowerCase()
     },
-
-    async createUser(user: any) {
-      const {
-        data: { userId }
-      } = await $axios.post('/api/prisma/create-user', user)
-
-      this.getUser(userId)
+    async createUser(user: IUser) {
+      const res = await $axios.post('/api/prisma/create-user', user)
+      this.$state.id = res.data.id
+      this.getUser()
     },
-    async getUser(id: UserId) {
-      const user = await $axios.get(`/api/prisma/get-user-by-id/${id}`)
-      if (user && this.$state.id === user.data.id) {
+    async getUser() {
+      const user = await $axios.get(
+        `/api/prisma/get-user-by-id/${this.$state.id}`
+      )
+      if (user) {
         this.$state.name = user.data.name
         this.$state.email = user.data.email
+        this.$state.theme_id = user.data.theme_id
+        this.$state.bio = user.data.bio
+        this.$state.image = user.data.image
+
+        this.getUserTheme()
       }
+    },
+    getUserTheme() {
+      this.$state.colors.forEach((color) => {
+        if (this.$state.theme_id === color.id) {
+          this.$state.theme = color
+        }
+      })
+    },
+    async updateUserDetails(name: string, bio: string) {
+      await $axios.patch(`/api/prisma/users/${this.$state.id}`, {
+        name: name,
+        bio: bio
+      })
+    },
+    async updateUserTheme(themeId) {
+      const res = await $axios.patch(`/api/prisma/users/${this.$state.id}`, {
+        theme_id: themeId
+      })
+      this.$state.theme_id = res.data.theme_id
+      this.getUserTheme()
+    },
+    async updateUserImage(data) {
+      await $axios.post(`/api/prisma/user-image`, data)
+    },
+    async updateLinkImage(data) {
+      await $axios.post(`/api/prisma/link-image`, data)
+    },
+    async getAllLinks() {
+      const res = await $axios.get('/api/prisma/links')
+      this.$state.allLinks = res.data
+    },
+    async addLink(name, url) {
+      await $axios.post('/api/prisma/links', {
+        name: name,
+        url: url
+      })
+    },
+    async updateLink(id: number, name: string, url: string) {
+      await $axios.patch(`/api/prisma/links/${id}`, {
+        name: name,
+        url: url
+      })
+    },
+    async deleteLink(id: number) {
+      await $axios.delete(`/api/prisma/links/${id}`)
     },
     resetState() {
       this.$state.id = '' as UserId

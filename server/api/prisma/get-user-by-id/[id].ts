@@ -7,6 +7,12 @@ export default defineEventHandler(async (event) => {
       where: { userId: event.context.params.id }
     })
 
-    return res
+    if (res) {
+      return res
+    } else {
+      return {
+        error: 'No user found'
+      }
+    }
   }
 })

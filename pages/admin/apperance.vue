@@ -33,8 +33,7 @@
                   placeholder="Profile Title"
                   v-model:input="name"
                   inputType="text"
-                  :max="25"
-                  :error="errors && errors.name ? errors.name[0] : ''" />
+                  :max="25" />
               </div>
 
               <textarea
@@ -112,7 +111,7 @@
 <script setup lang="ts">
 import AdminLayout from '~~/layouts/AdminLayout.vue'
 import { useUserStore } from '~~/stores/user/user.store'
-import { type ICropperFormDataFields } from '~~/shared/types'
+import { type ICropperFormDataFields } from '~~/components/types/cropper-modal'
 
 const userStore = useUserStore()
 
@@ -121,7 +120,7 @@ definePageMeta({ middleware: 'is-logged-out' })
 const name = ref<string>('')
 const bio = ref<string>('')
 const data = ref<ICropperFormDataFields | null>(null)
-const errors = ref<string>('')
+const serverErrors = ref<string>('') // maybe later
 const isBioFocused = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
 
@@ -130,12 +129,32 @@ const bioLengthComputed = computed(() => {
 })
 
 const updateTheme = async (themeId: number) => {
-  //
+  try {
+    await userStore.updateUserTheme(themeId)
+    await userStore.getUser()
+  } catch (error) {
+    console.log(error)
+  }
 }
 
-const updateUserDetails = useDebounce(async () => {})
+const updateUserDetails = useDebounce(async () => {
+  try {
+    await userStore.updateUserDetails(name.value, bio.value)
+    await userStore.getUser()
+  } catch (error) {
+    console.log(error)
+  }
+}, 500)
 
-const updateUserImage = async () => {}
+const updateUserImage = async () => {
+  try {
+    await userStore.updateUserImage(data.value)
+  } catch (error) {
+    openCropper.value = false
+    alert(error)
+    console.log(error)
+  }
+}
 
 watch(
   () => name.value,

@@ -1,14 +1,14 @@
-import { type Color, type Link } from '~/shared/types'
+import { type Color, type Link, type Theme } from '~/shared/types'
 import { type UserId } from '~~/entities/user/model/types'
 
 export interface UserState {
   id: UserId
-  theme_id: Id
+  theme_id: number
   name: string
   email: Email
   image: string
   bio: string
-  theme: null
+  theme: Theme | null
   colors: Color[]
   allLinks: Link[]
   isMobile: boolean
