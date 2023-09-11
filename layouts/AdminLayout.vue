@@ -13,7 +13,9 @@
               src="~/assets/images/logo.png" />
           </NuxtLink>
 
-          <div v-for="link in links" class="lg:px-2.5 px-0.5 md:block hidden">
+          <div
+            v-for="link in userStore.allLinks"
+            class="lg:px-2.5 px-0.5 md:block hidden">
             <NuxtLink
               :to="link.url"
               class="flex items-center text-sm font-semibold px-1.5 py-3 rounded-lg hover:bg-gray-100">
@@ -83,7 +85,7 @@
         class="flex items-center justify-between gap-4 shadow-sm bg-white w-full"
         :class="route">
         <div class="flex w-full">
-          <div v-for="link in linksSecondaryNav" class="w-1/4">
+          <div v-for="link in userStore.allLinksSecondaryNav" class="w-1/4">
             <NuxtLink
               :to="link.url"
               class="relative flex justify-center border-t-black text-sm w-full h-full font-semibold px-1.5 my-[1px] py-[1px] hover:bg-gray-100"
@@ -166,7 +168,7 @@
     class="fixed z-20 bottom-0 flex w-full bg-white shadow-[0_35px_60px_10px_rgba(0,0,0,0.4)]"
     :class="userStore.isMobile ? 'h-[70px]' : 'h-[60px]'">
     <div class="flex w-full">
-      <div v-for="link in linksMobile" class="w-1/5">
+      <div v-for="link in userStore.allLinksMobile" class="w-1/5">
         <button
           class="relative flex justify-center text-sm w-full h-full font-semibold px-1.5 py-1 hover:bg-gray-100"
           :class="

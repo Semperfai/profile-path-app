@@ -215,6 +215,7 @@ const cropImage = async () => {
     const data = new FormData()
 
     data.append('image', file.value || '')
+
     if (coordinates) {
       data.append('height', coordinates.height || '')
       data.append('width', coordinates.width || '')

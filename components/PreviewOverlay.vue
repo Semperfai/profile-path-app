@@ -58,10 +58,10 @@
           <div
             class="text-center font-light mt-2"
             :class="userStore.theme?.text">
-            <div class="px-8">This is a bio section!!!</div>
+            <div class="px-8">{{userStore.bio }}</div>
           </div>
 
-          <div v-for="link in links">
+          <div v-for="link in userStore.allLinks">
             <a
               :href="link.url"
               target="_blank"
@@ -93,7 +93,6 @@
 </template>
 
 <script setup>
-import { links } from '~~/__mocks__/links'
 import { useUserStore } from '~~/stores/user/user.store'
 const userStore = useUserStore()
 

@@ -20,10 +20,10 @@
           <div
             class="text-center text-lg font-light mt-2 mb-10"
             :class="userStore.theme?.text">
-            <div class="px-8">This is bio section</div>
+            <div class="px-8">{{ userStore.bio }}</div>
           </div>
 
-          <div v-for="link in links">
+          <div v-for="link in userStore.allLinks">
             <a
               :href="link.url"
               target="_blank"
@@ -47,7 +47,6 @@
 
 <script setup>
 import AdminLayout from '~~/layouts/AdminLayout.vue'
-import { links } from '~~/__mocks__/links'
 
 import { useUserStore } from '~~/stores/user/user.store'
 const userStore = useUserStore()

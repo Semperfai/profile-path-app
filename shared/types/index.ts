@@ -33,4 +33,12 @@ export const optionsVariants = [
   'More'
 ] as const
 
+export type ServerErrors = {
+  response: {
+    data: {
+      errors: string
+    }
+  }
+}
+
 export type CurrentMenuOptionsVariant = (typeof optionsVariants)[number]

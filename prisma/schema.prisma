@@ -11,8 +11,10 @@ datasource db {
 model Users {
   id         Int         @id @default(autoincrement())
   userId     String      @unique 
+  theme_id   Int         
   email      String      @unique
   name       String
+  image      String
   links      Links[]     
   created_at String
 }

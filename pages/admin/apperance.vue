@@ -33,6 +33,8 @@
                   placeholder="Profile Title"
                   v-model:input="name"
                   inputType="text"
+                  @server-errors-state="handleServerErrorsState"
+                  :server-errors="serverErrors"
                   :max="25" />
               </div>
 
@@ -112,6 +114,7 @@
 import AdminLayout from '~~/layouts/AdminLayout.vue'
 import { useUserStore } from '~~/stores/user/user.store'
 import { type ICropperFormDataFields } from '~~/components/types/cropper-modal'
+import { type ServerErrors } from '~~/shared/types'
 
 const userStore = useUserStore()
 
@@ -120,7 +123,7 @@ definePageMeta({ middleware: 'is-logged-out' })
 const name = ref<string>('')
 const bio = ref<string>('')
 const data = ref<ICropperFormDataFields | null>(null)
-const serverErrors = ref<string>('') // maybe later
+const serverErrors = ref<string>('')
 const isBioFocused = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
 
@@ -141,8 +144,14 @@ const updateUserDetails = useDebounce(async () => {
   try {
     await userStore.updateUserDetails(name.value, bio.value)
     await userStore.getUser()
-  } catch (error) {
-    console.log(error)
+  } catch (error: unknown) {
+    if (error instanceof Error && 'response' in error) {
+      const serverError = error as ServerErrors
+      serverErrors.value = serverError.response.data.errors
+      console.log(error)
+    } else {
+      console.log(error)
+    }
   }
 }, 500)
 
@@ -158,6 +167,10 @@ const updateUserImage = async () => {
     alert(error)
     console.log(error)
   }
+}
+
+const handleServerErrorsState = () => {
+  serverErrors.value = ''
 }
 
 watch(

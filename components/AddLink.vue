@@ -9,16 +9,13 @@
       </button>
     </div>
 
-    <form
-      @submit.prevent="submit()"
-      class="flex items-center gap-4 w-full pt-2 p-6">
+    <form @submit.prevent class="flex items-center gap-4 w-full pt-2 p-6">
       <div class="w-full">
         <TextInput
           class="w-full"
           placeholder="Name"
           v-model:input="name"
-          inputType="text"
-          :error="errors && errors.name ? errors.name[0] : ''" />
+          inputType="text" />
 
         <div class="py-1" />
 
@@ -26,8 +23,7 @@
           class="w-full"
           placeholder="URL"
           v-model:input="url"
-          inputType="text"
-          :error="errors && errors.url ? errors.url[0] : ''" />
+          inputType="text" />
       </div>
 
       <button
@@ -54,7 +50,6 @@ const emit = defineEmits(['close'])
 
 const name = ref<string>('')
 const url = ref<string>('')
-const errors = ref(null)
 
 const addLink = async () => {
   try {
@@ -68,7 +63,6 @@ const addLink = async () => {
     }, 100)
   } catch (e) {
     console.log(e)
-    errors.value = e.response.data.errors
   }
 }
 </script>

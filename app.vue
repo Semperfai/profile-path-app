@@ -41,12 +41,47 @@ const checkPath = (path: string) => {
   bgIsGray.value = true
 }
 
+watch(
+  () => route.fullPath,
+  (path) => {
+    checkPath(path)
+  }
+)
+
+watch(
+  () => isPreviewOverlay.value,
+  (value) => {
+    let id = null
+    if (route.fullPath === '/admin') {
+      id = 'AdminPage'
+    } else if (route.fullPath === '/admin/appearance') {
+      id = 'AppearancePage'
+    } else if (route.fullPath === 'admin/settings') {
+      id = 'SettingsPage'
+    }
+
+    if (!id) return
+
+    userStore.hidePageOverflow(value, id)
+  }
+)
+
 onMounted(() => {
   colors.value = setColors()
   updatedLinkId.value = 0
   addLinkOverlay.value = false
   isPreviewOverlay.value = false
   isMobile.value = false
+
+  try {
+    if (id.value) {
+      userStore.hasSessionExpired()
+      userStore.getUser()
+      userStore.getAllLinks()
+    }
+  } catch (error) {
+    console.log(error)
+  }
 
   checkPath(route.fullPath)
 

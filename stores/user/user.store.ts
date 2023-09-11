@@ -112,8 +112,16 @@ export const useUserStore = defineStore('user', {
       await $axios.post(`/api/prisma/link-image`, data)
     },
     async getAllLinks() {
-      const res = await $axios.get('/api/prisma/links')
-      this.$state.allLinks = res.data
+      try {
+        const res = await $axios.get(
+          `/api/prisma/get-all-links-by-user/${this.$state.id}`
+        )
+        if (res.data) {
+          this.$state.allLinks = res.data
+        }
+      } catch (error) {
+        console.log(error)
+      }
     },
     async addLink(name, url) {
       await $axios.post('/api/prisma/links', {
