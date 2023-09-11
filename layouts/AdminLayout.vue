@@ -13,9 +13,7 @@
               :src="userStore.image" />
           </NuxtLink>
 
-          <div
-            v-for="link in userStore.allLinks"
-            class="lg:px-2.5 px-0.5 md:block hidden">
+          <div v-for="link in links" class="lg:px-2.5 px-0.5 md:block hidden">
             <NuxtLink
               :to="link.url"
               class="flex items-center text-sm font-semibold px-1.5 py-3 rounded-lg hover:bg-gray-100">
@@ -261,6 +259,17 @@ const linksMobile = ref<NavbarLink[]>([
     img: ''
   },
   { name: 'More', url: '/admin/more', icon: '', img: userStore.image }
+])
+
+const links = ref<NavbarLink[]>([
+  { name: 'Links', url: '/admin', icon: 'icon-park-outline:hamburger-button' },
+  {
+    name: 'Apperance',
+    url: '/admin/apperance',
+    icon: 'fluent:shapes-48-regular'
+  },
+  { name: 'Analytics', url: '/', icon: 'tabler:brand-google-analytics' },
+  { name: 'Settings', url: '/', icon: 'material-symbols:settings' }
 ])
 
 const openMenu = (str: string): void => {
