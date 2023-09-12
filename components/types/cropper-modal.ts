@@ -9,10 +9,3 @@ export interface CropperComponent {
     }
   }
 }
-
-export type ICropperFormDataFields = Record<
-  'height' | 'width' | 'left' | 'top' | 'id',
-  StringOrNumber
-> & {
-  image: File | string
-}

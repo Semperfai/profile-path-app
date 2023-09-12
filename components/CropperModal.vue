@@ -101,15 +101,12 @@
 
 <script setup lang="ts">
 import { Cropper } from 'vue-advanced-cropper'
-import {
-  type CropperComponent,
-  type ICropperFormDataFields
-} from '~~/components/types/cropper-modal'
+import { type CropperComponent } from '~~/components/types/cropper-modal'
 import 'vue-advanced-cropper/dist/style.css'
 
 const emit = defineEmits<{
   (e: 'close'): void
-  (e: 'data', data: ICropperFormDataFields): void
+  (e: 'data', data: any): void
 }>()
 
 const props = defineProps<{
@@ -192,21 +189,6 @@ const takePhoto = () => {
   }
 }
 
-const convertFormDataToICropperFormDataFields = (
-  formData: FormData
-): ICropperFormDataFields => {
-  const fields: ICropperFormDataFields = {
-    image: formData.get('image') as File | string,
-    height: formData.get('height') as StringOrNumber,
-    width: formData.get('width') as StringOrNumber,
-    left: formData.get('left') as StringOrNumber,
-    top: formData.get('top') as StringOrNumber,
-    id: formData.get('id') as StringOrNumber
-  }
-
-  return fields
-}
-
 const cropImage = async () => {
   isCropping.value = true
   if (cropper.value) {
@@ -226,7 +208,7 @@ const cropImage = async () => {
     data.append('id', linkId.value || '')
 
     isCropping.value = true
-    emit('data', convertFormDataToICropperFormDataFields(data))
+    emit('data', data)
   }
 }
 </script>

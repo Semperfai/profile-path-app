@@ -111,7 +111,6 @@
 <script setup lang="ts">
 import AdminLayout from '~~/layouts/AdminLayout.vue'
 import { useUserStore } from '~~/stores/user/user.store'
-import { type ICropperFormDataFields } from '~~/components/types/cropper-modal'
 import { type ServerErrors } from '~~/shared/types'
 
 const userStore = useUserStore()
@@ -120,7 +119,7 @@ definePageMeta({ middleware: 'is-logged-out' })
 
 const name = ref<string>('')
 const bio = ref<string>('')
-const data = ref<ICropperFormDataFields | null>(null)
+const data = ref(null)
 const serverErrors = ref<string>('')
 const isBioFocused = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
@@ -183,4 +182,9 @@ watch(
   () => data.value,
   async () => await updateUserImage()
 )
+
+onMounted(() => {
+  name.value = userStore.name
+  bio.value = userStore.bio
+})
 </script>
