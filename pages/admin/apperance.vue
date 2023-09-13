@@ -64,7 +64,7 @@
             <div class="w-full bg-white rounded-3xl p-6">
               <div
                 class="grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 grid-cols-2 gap-4">
-                <div v-for="item in userStore.colors">
+                <div v-for="item in userStore.colors" :key="item.id">
                   <div
                     class="border-2 border-gray-500 rounded-lg aspect-[2/3] border-dashed cursor-pointer"
                     :class="
@@ -125,7 +125,7 @@ const isBioFocused = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
 
 const bioLengthComputed = computed(() => {
-  return bio.value.length
+  return bio.value?.length
 })
 
 const updateTheme = async (themeId: number) => {
@@ -184,7 +184,7 @@ watch(
 )
 
 onMounted(() => {
-  name.value = userStore.name
-  bio.value = userStore.bio
+  name.value = userStore?.name
+  bio.value = userStore?.bio
 })
 </script>
