@@ -98,7 +98,7 @@ export const useUserStore = defineStore('user', {
         bio: bio
       })
     },
-    async updateUserTheme(themeId) {
+    async updateUserTheme(themeId: number) {
       const res = await $axios.patch(`/api/prisma/users/${this.$state.id}`, {
         theme_id: themeId
       })
@@ -106,7 +106,7 @@ export const useUserStore = defineStore('user', {
       this.getUserTheme()
     },
     async updateUserImage(data) {
-      await $axios.post(`/api/prisma/user-image`, data)
+      await $axios.post(`/api/prisma/`, data)
     },
     async updateLinkImage(data) {
       await $axios.post(`/api/prisma/link-image`, data)

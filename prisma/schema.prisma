@@ -9,7 +9,7 @@ datasource db {
 
 model Users {
   id         Int         @id @default(autoincrement())
-  userId     String      @unique 
+  userId     String      @db.Uuid
   theme_id   Int         
   email      String      @unique
   name       String
@@ -19,7 +19,7 @@ model Users {
 
 model Links {
   id         Int         @id @default(autoincrement())
-  userId     String      @unique
+  userId     String      
   name       String
   url        String
   image      String 
