@@ -68,7 +68,7 @@ export const useUserStore = defineStore('user', {
     },
     async createUser(user: IUser) {
       const res = await $axios.post('/api/prisma/create-user', user)
-      this.$state.id = res.data.id
+      this.$state.id = res.data.userId
       this.getUser()
     },
     async getUser() {
@@ -77,7 +77,7 @@ export const useUserStore = defineStore('user', {
       )
       if (user) {
         this.$state.name = user.data.name
-        this.$state.email = user.data.email
+        this.$state.email = user.data.emailF
         this.$state.theme_id = user.data.theme_id
         this.$state.bio = user.data.bio
         this.$state.image = user.data.image
@@ -106,7 +106,7 @@ export const useUserStore = defineStore('user', {
       this.getUserTheme()
     },
     async updateUserImage(data) {
-      await $axios.post(`/api/prisma/`, data)
+      await $axios.post(`/api/prisma/user-image`, data)
     },
     async updateLinkImage(data) {
       await $axios.post(`/api/prisma/link-image`, data)

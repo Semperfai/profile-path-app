@@ -10,10 +10,11 @@ datasource db {
 model Users {
   id         Int         @id @default(autoincrement())
   userId     String      @db.Uuid
-  theme_id   Int         
+  theme_id   Int?         
   email      String      @unique
   name       String
-  image      String
+  bio        String?
+  image      String?
   created_at String
 }
 
