@@ -11,7 +11,8 @@ export const useUserStore = defineStore('user', {
     theme_id: -1,
     name: '',
     email: '',
-    image: 'https://picsum.photos/id/4/300/320',
+    image: '',
+    src: 'https://picsum.photos/id/4/300/320',
     bio: '',
     theme: null,
     colors: [],
@@ -72,6 +73,8 @@ export const useUserStore = defineStore('user', {
       this.getUser()
     },
     async getUser() {
+      const supabase = useSupabaseClient()
+
       const user = await $axios.get(
         `/api/prisma/get-user-by-id/${this.$state.id}`
       )
@@ -80,6 +83,14 @@ export const useUserStore = defineStore('user', {
         this.$state.email = user.data.emailF
         this.$state.theme_id = user.data.theme_id
         this.$state.bio = user.data.bio
+        this.$state.image = user.data.image
+
+        const { data, error } = await supabase.storage
+          .from('users')
+          .download(this.$state.image)
+        if (error) throw error
+
+        this.$state.src = URL.createObjectURL(data)
 
         this.getUserTheme()
       }
@@ -115,8 +126,27 @@ export const useUserStore = defineStore('user', {
       this.$state.theme_id = res.data.theme_id
       this.getUserTheme()
     },
-    async updateUserImage(data) {
-      await $axios.post(`/api/prisma/user-image`, data)
+    async updateUserImage(path: string) {
+      try {
+        const user = await $axios.get(
+          `/api/prisma/get-user-by-id/${this.$state.id}`
+        )
+        if (!user) return
+        const supabase = useSupabaseClient()
+
+        await $axios.patch(`/api/prisma/update-user-image/${user.data.id}`, {
+          image: path
+        })
+
+        const { data, error } = await supabase.storage
+          .from('users')
+          .download(this.$state.image)
+        if (error) throw error
+
+        this.$state.src = URL.createObjectURL(data)
+      } catch (error: any) {
+        console.error('Error downloading image: ', error.message)
+      }
     },
     async updateLinkImage(data) {
       await $axios.post(`/api/prisma/link-image`, data)

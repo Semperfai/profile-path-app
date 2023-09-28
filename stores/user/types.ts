@@ -7,6 +7,7 @@ export interface UserState {
   name: string
   email: Email
   image: string
+  src: string
   bio: string
   theme: Theme | null
   colors: Color[]

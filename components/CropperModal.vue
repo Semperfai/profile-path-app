@@ -103,6 +103,10 @@
 import { Cropper } from 'vue-advanced-cropper'
 import { type CropperComponent } from '~~/components/types/cropper-modal'
 import 'vue-advanced-cropper/dist/style.css'
+import { useUserStore } from '~~/stores/user/user.store'
+
+const supabase = useSupabaseClient()
+const userStore = useUserStore()
 
 const emit = defineEmits<{
   (e: 'close'): void
@@ -194,21 +198,44 @@ const cropImage = async () => {
   if (cropper.value) {
     const { coordinates } = cropper.value.getResult()
 
-    const data = new FormData()
-
-    data.append('image', file.value || '')
-
-    if (coordinates) {
-      data.append('height', coordinates.height || '')
-      data.append('width', coordinates.width || '')
-      data.append('left', coordinates.left || '')
-      data.append('top', coordinates.top || '')
+    if (!file.value) {
+      throw new Error('You must select an image to upload.')
     }
 
-    data.append('id', linkId.value || '')
+    const fileExt = file.value.name.split('.').pop()
+    const imgCode = `${Math.random()}`
+    const filePath = `avatars/${userStore.id}/${imgCode}.${fileExt}`
+
+    try {
+      let { error: uploadError } = await supabase.storage
+        .from('users')
+        .upload(filePath, file.value, {
+          cacheControl: '3600',
+          upsert: false
+        })
+
+      if (uploadError) throw uploadError
+    } catch (e) {
+      throw e
+    }
+
+    if (coordinates) {
+      const imgStyles = {
+        height: coordinates.height,
+        width: coordinates.width,
+        left: coordinates.left,
+        top: coordinates.top
+      }
+
+      emit('data', {
+        imgStyles,
+        filePath
+      })
+    }
+
+    // formData.append('id', linkId.value || '')
 
     isCropping.value = true
-    emit('data', data)
   }
 }
 </script>

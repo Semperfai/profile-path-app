@@ -133,4 +133,9 @@ watch(
   },
   { immediate: true }
 )
+
+onMounted(async () => {
+  const { data, error } = await supabase.storage.listBuckets()
+  console.log(data)
+})
 </script>

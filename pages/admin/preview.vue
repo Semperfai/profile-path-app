@@ -9,7 +9,7 @@
         <div class="h-full mx-auto w-full">
           <img
             class="rounded-full min-w-[120px] w-[120px] mx-auto"
-            :src="userStore.image" />
+            :src="userStore.src" />
 
           <div
             class="text-center text-2xl font-semibold mt-2"

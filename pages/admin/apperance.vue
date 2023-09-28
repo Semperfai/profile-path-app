@@ -15,7 +15,7 @@
 
             <div class="w-full bg-white rounded-3xl p-6">
               <div class="flex items-center justify-between gap-4">
-                <img class="rounded-full w-[90px]" :src="userStore.image" />
+                <img class="rounded-full w-[90px]" :src="userStore.src" />
 
                 <div class="w-full">
                   <button
@@ -119,7 +119,15 @@ definePageMeta({ middleware: 'is-logged-out' })
 
 const name = ref<string>('')
 const bio = ref<string>('')
-const data = ref(null)
+const data = ref<{
+  imgStyles: {
+    height: string | undefined
+    width: string | undefined
+    left: string | undefined
+    top: string | undefined
+  }
+  filePath: string
+} | null>(null)
 const serverErrors = ref<string>('')
 const isBioFocused = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
@@ -154,7 +162,8 @@ const updateUserDetails = useDebounce(async () => {
 
 const updateUserImage = async () => {
   try {
-    await userStore.updateUserImage(data.value)
+    if (!data.value) return
+    await userStore.updateUserImage(data.value.filePath)
     await userStore.getUser()
     setTimeout(() => {
       openCropper.value = false
@@ -183,7 +192,8 @@ watch(
   async () => await updateUserImage()
 )
 
-onMounted(() => {
+onMounted(async () => {
+  await updateUserImage()
   name.value = userStore?.name
   bio.value = userStore?.bio
 })

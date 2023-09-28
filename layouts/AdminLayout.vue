@@ -60,7 +60,7 @@
             class="rounded-full md:block hidden">
             <img
               class="rounded-full min-w-[40px] w-[40px]"
-              :src="userStore.image" />
+              :src="userStore.src" />
           </button>
         </div>
       </div>
@@ -229,7 +229,7 @@ const linksSecondaryNav = ref<NavbarLink[]>([
     name: 'More',
     url: '/admin/more',
     icon: '',
-    img: userStore.image
+    img: userStore.src
   }
 ])
 
@@ -258,7 +258,7 @@ const linksMobile = ref<NavbarLink[]>([
     icon: 'tabler:brand-google-analytics',
     img: ''
   },
-  { name: 'More', url: '/admin/more', icon: '', img: userStore.image }
+  { name: 'More', url: '/admin/more', icon: '', img: userStore.src }
 ])
 
 const links = ref<NavbarLink[]>([

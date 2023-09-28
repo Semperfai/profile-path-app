@@ -47,7 +47,7 @@
         <div class="h-full mx-auto w-full overflow-auto z-10">
           <img
             class="rounded-full min-w-[100px] w-[100px] mx-auto"
-            :src="userStore.image" />
+            :src="userStore.src" />
 
           <div
             class="text-center text-xl font-semibold mt-4"
@@ -68,7 +68,7 @@
               class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg">
               <img
                 class="rounded-lg h-[45px] aspect-square"
-                :src="userStore.image" />
+                :src="userStore.src" />
 
               <div class="absolute text-[16px] text-center w-full">
                 {{ link.name }}
