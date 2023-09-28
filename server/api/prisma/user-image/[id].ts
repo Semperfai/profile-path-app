@@ -4,10 +4,10 @@ const prisma = new PrismaClient()
 export default defineEventHandler(async (event) => {
   const body = await readBody(event)
 
-  const res = await prisma.users.update({
+  const res = await prisma.links.update({
     where: { id: Number(event?.context?.params?.id) },
     data: {
-      theme_id: body.theme_id
+      image: body.image
     }
   })
 

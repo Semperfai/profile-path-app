@@ -93,15 +93,26 @@ export const useUserStore = defineStore('user', {
       })
     },
     async updateUserDetails(name: string, bio: string) {
-      await $axios.patch(`/api/prisma/users/${this.$state.id}`, {
+      const user = await $axios.get(
+        `/api/prisma/get-user-by-id/${this.$state.id}`
+      )
+      if (!user) return
+      await $axios.patch(`/api/prisma/update-user-details/${user.data.id}`, {
         name: name,
         bio: bio
       })
     },
     async updateUserTheme(themeId: number) {
-      const res = await $axios.patch(`/api/prisma/users/${this.$state.id}`, {
-        theme_id: themeId
-      })
+      const user = await $axios.get(
+        `/api/prisma/get-user-by-id/${this.$state.id}`
+      )
+      if (!user) return
+      const res = await $axios.patch(
+        `/api/prisma/update-user-theme/${user.data.id}`,
+        {
+          theme_id: themeId
+        }
+      )
       this.$state.theme_id = res.data.theme_id
       this.getUserTheme()
     },
@@ -130,7 +141,7 @@ export const useUserStore = defineStore('user', {
       })
     },
     async updateLink(id: number, name: string, url: string) {
-      await $axios.patch(`/api/prisma/links/${id}`, {
+      await $axios.patch(`/api/prisma/update-links/${id}`, {
         name: name,
         url: url
       })
