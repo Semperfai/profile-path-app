@@ -185,7 +185,7 @@
 import { useUserStore } from '~~/stores/user/user.store'
 import { storeToRefs } from 'pinia'
 import { type Link } from '~~/shared/types'
-import { ICropperFormDataFields } from '~~/components/types/cropper-modal'
+import { type CropperData } from '~~/components/types/cropper-modal'
 const userStore = useUserStore()
 const { isMobile, updatedLinkId } = storeToRefs(userStore)
 
@@ -205,7 +205,7 @@ const emit = defineEmits(['updatedInput'])
 
 const name = ref<string>('')
 const url = ref<Url>('')
-const data = ref<ICropperFormDataFields | null>(null)
+const data = ref<CropperData | null>(null)
 const isDelete = ref<boolean>(false)
 const openCropper = ref<boolean>(false)
 const isUploadImage = ref<boolean>(false)
@@ -287,7 +287,7 @@ const deleteLink = async () => {
 
   try {
     if (res) {
-      await userStore.updateLinkImage(data.value)
+      await userStore.deleteLink(link.value.id)
       await userStore.getAllLinks()
     }
 

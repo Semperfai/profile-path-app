@@ -164,8 +164,9 @@ export const useUserStore = defineStore('user', {
         console.log(error)
       }
     },
-    async addLink(name, url) {
-      await $axios.post('/api/prisma/links', {
+    async addLink(name: string, url: string) {
+      await $axios.post('/api/prisma/add-link', {
+        userId: this.$state.id,
         name: name,
         url: url
       })
@@ -177,7 +178,7 @@ export const useUserStore = defineStore('user', {
       })
     },
     async deleteLink(id: number) {
-      await $axios.delete(`/api/prisma/links/${id}`)
+      await $axios.delete(`/api/prisma/delete-link/${id}`)
     },
     resetState() {
       this.$state.id = '' as UserId

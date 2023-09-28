@@ -8,8 +8,7 @@ export default defineEventHandler(async (event) => {
     data: {
       userId: body.userId,
       name: body.name,
-      url: body.url,
-      image: body.image
+      url: body.url
     }
   })
 
