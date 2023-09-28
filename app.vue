@@ -15,14 +15,8 @@ import { storeToRefs } from 'pinia'
 import { Color } from 'shared/types'
 
 const userStore = useUserStore()
-const {
-  isMobile,
-  isPreviewOverlay,
-  updatedLinkId,
-  addLinkOverlay,
-  id,
-  colors
-} = storeToRefs(userStore)
+const { isMobile, isPreviewOverlay, updatedLinkId, addLinkOverlay, id } =
+  storeToRefs(userStore)
 
 const route = useRoute()
 
@@ -108,7 +102,6 @@ watch(
 )
 
 onMounted(() => {
-  colors.value = setColors()
   updatedLinkId.value = 0
   addLinkOverlay.value = false
   isPreviewOverlay.value = false

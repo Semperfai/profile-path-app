@@ -93,6 +93,7 @@ export const useUserStore = defineStore('user', {
         this.$state.src = URL.createObjectURL(data)
 
         this.getUserTheme()
+        this.getAllLinks()
       }
     },
     getUserTheme() {
@@ -170,7 +171,7 @@ export const useUserStore = defineStore('user', {
       })
     },
     async updateLink(id: number, name: string, url: string) {
-      await $axios.patch(`/api/prisma/update-links/${id}`, {
+      await $axios.patch(`/api/prisma/update-link/${id}`, {
         name: name,
         url: url
       })

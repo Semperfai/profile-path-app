@@ -103,8 +103,6 @@ const login = async () => {
       password: formData.password
     })
 
-    //todo await userStore.getAllLinks() we need this? we can implement this in store?
-
     if (error) {
       serverErrors.value = error.message
       return
@@ -128,7 +126,7 @@ watch(
     if (user.value) {
       userStore.id = user.value.id
       await userStore.getUser()
-      router.push('/admin')
+      router.push('/admin/apperance')
     }
   },
   { immediate: true }

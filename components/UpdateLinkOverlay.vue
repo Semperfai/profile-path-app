@@ -91,7 +91,7 @@
 import { useUserStore } from '~~/stores/user/user.store'
 import { storeToRefs } from 'pinia'
 import { type Link } from '~~/shared/types'
-import { type ICropperFormDataFields } from '~~/components/types/cropper-modal'
+import { type CropperData } from '~~/components/types/cropper-modal'
 const userStore = useUserStore()
 const { updatedLinkId } = storeToRefs(userStore)
 
@@ -99,7 +99,7 @@ const isName = ref<boolean>(false)
 const isLink = ref<boolean>(false)
 const name = ref<string>('')
 const url = ref<string>('')
-const data = ref<ICropperFormDataFields | null>(null)
+const data = ref<CropperData | null>(null)
 const currentLink = ref<Link | null>(null)
 const openCropper = ref<boolean>(false)
 const errors = ref(null)

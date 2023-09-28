@@ -9,3 +9,13 @@ export interface CropperComponent {
     }
   }
 }
+
+export interface CropperData {
+  imgStyles: {
+    height?: string
+    width?: string
+    left?: string
+    top?: string
+  }
+  filePath: string
+}
