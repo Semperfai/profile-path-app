@@ -124,9 +124,10 @@ const handleServerErrorsState = () => {
 
 watch(
   user,
-  () => {
+  async () => {
     if (user.value) {
       userStore.id = user.value.id
+      await userStore.getUser()
       router.push('/admin')
     }
   },
