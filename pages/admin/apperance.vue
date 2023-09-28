@@ -234,6 +234,5 @@ onMounted(async () => {
   userStore.colors = setColors()
   name.value = userStore.name
   bio.value = userStore.bio
-  await updateUserImage()
 })
 </script>

@@ -152,23 +152,29 @@ export const useUserStore = defineStore('user', {
     },
     async getAllLinks() {
       const supabase = useSupabaseClient()
-
+      let links = []
       try {
         const res = await $axios.get(
           `/api/prisma/get-all-links-by-user/${this.$state.id}`
         )
         if (res.data) {
-          res.data.forEach(async (link: Link) => {
+          const tasks = res.data.map(async (link: Link) => {
             if (link.image) {
               const { data, error } = await supabase.storage
                 .from('users')
                 .download(link.image)
               if (error) throw error
 
-              link.src = URL.createObjectURL(data)
+              return {
+                ...link,
+                src: URL.createObjectURL(data)
+              }
             }
+            return link
           })
-          this.$state.allLinks = res.data
+
+          links = await Promise.all(tasks)
+          this.$state.allLinks = links
         }
       } catch (error) {
         console.log(error)
