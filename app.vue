@@ -101,7 +101,7 @@ watch(
   }
 )
 
-onMounted(() => {
+onMounted(async () => {
   updatedLinkId.value = 0
   addLinkOverlay.value = false
   isPreviewOverlay.value = false
@@ -109,9 +109,9 @@ onMounted(() => {
 
   try {
     if (id.value) {
-      userStore.hasSessionExpired()
-      userStore.getUser()
-      userStore.getAllLinks()
+      await userStore.hasSessionExpired()
+      await userStore.getUser()
+      await userStore.getAllLinks()
     }
   } catch (error) {
     console.log(error)
