@@ -162,7 +162,7 @@
       </div>
 
       <div class="w-full flex items-center justify-between px-4 py-5">
-        <img class="rounded-lg w-[80px] aspect-square" :src="link.image" />
+        <img class="rounded-lg w-[80px] aspect-square" :src="link.src" />
 
         <div class="w-full pl-3">
           <button
@@ -271,7 +271,9 @@ const editImage = (): void => {
 
 const updateLinkImage = async () => {
   try {
-    await userStore.updateLinkImage(data.value)
+    if (data.value) {
+      await userStore.updateLinkImage(link.value.id, data.value.filePath)
+    }
     await userStore.getAllLinks()
 
     setTimeout(() => {

@@ -17,6 +17,7 @@ export type Link = {
   name: string
   url: string
   image?: string
+  src?: string
   icon: string
 }
 

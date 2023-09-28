@@ -34,7 +34,7 @@
             :href="link.url"
             target="_blank"
             class="flex items-center relative w-[calc(100%-10px)] mx-auto border bg-white mt-2 p-1 rounded-xl">
-            <img class="rounded-lg h-[30px] aspect-square" :src="link.image" />
+            <img class="rounded-lg h-[30px] aspect-square" :src="link.src" />
 
             <div class="absolute w-full">
               <div class="max-w-[70%] w-full mx-auto text-[10px] text-center">

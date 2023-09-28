@@ -73,10 +73,10 @@
       </button>
 
       <img
-        v-if="currentLink && currentLink.image"
+        v-if="currentLink && currentLink.src"
         class="mx-auto pt-4 aspect-square object-cover"
         width="300"
-        :src="currentLink.image" />
+        :src="currentLink.src" />
     </div>
 
     <CropperModal

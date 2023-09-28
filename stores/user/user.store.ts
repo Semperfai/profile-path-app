@@ -2,6 +2,7 @@ import axios from '~/plugins/axios'
 import { defineStore } from 'pinia'
 import type { UserState } from './types'
 import type { UserId, IUser } from '~/entities/user/model/types'
+import { type Link } from '~~/shared/types'
 
 const $axios = axios().provide.axios
 
@@ -80,7 +81,7 @@ export const useUserStore = defineStore('user', {
       )
       if (user) {
         this.$state.name = user.data.name
-        this.$state.email = user.data.emailF
+        this.$state.email = user.data.email
         this.$state.theme_id = user.data.theme_id
         this.$state.bio = user.data.bio
         this.$state.image = user.data.image
@@ -149,15 +150,24 @@ export const useUserStore = defineStore('user', {
         console.error('Error downloading image: ', error.message)
       }
     },
-    async updateLinkImage(data) {
-      await $axios.post(`/api/prisma/link-image`, data)
-    },
     async getAllLinks() {
+      const supabase = useSupabaseClient()
+
       try {
         const res = await $axios.get(
           `/api/prisma/get-all-links-by-user/${this.$state.id}`
         )
         if (res.data) {
+          res.data.forEach(async (link: Link) => {
+            if (link.image) {
+              const { data, error } = await supabase.storage
+                .from('users')
+                .download(link.image)
+              if (error) throw error
+
+              link.src = URL.createObjectURL(data)
+            }
+          })
           this.$state.allLinks = res.data
         }
       } catch (error) {
@@ -176,6 +186,15 @@ export const useUserStore = defineStore('user', {
         name: name,
         url: url
       })
+    },
+    async updateLinkImage(id: number, path: string) {
+      try {
+        await $axios.patch(`/api/prisma/update-link-image/${id}`, {
+          image: path
+        })
+      } catch (error: any) {
+        console.error('Error downloading image: ', error.message)
+      }
     },
     async deleteLink(id: number) {
       await $axios.delete(`/api/prisma/delete-link/${id}`)

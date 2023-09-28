@@ -28,9 +28,7 @@
               :href="link.url"
               target="_blank"
               class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg">
-              <img
-                class="rounded-lg h-[55px] aspect-square"
-                :src="link.image" />
+              <img class="rounded-lg h-[55px] aspect-square" :src="link.src" />
 
               <div class="absolute text-[20px] text-center w-full">
                 {{ link.name }}
