@@ -80,7 +80,6 @@ export const useUserStore = defineStore('user', {
         this.$state.email = user.data.emailF
         this.$state.theme_id = user.data.theme_id
         this.$state.bio = user.data.bio
-        this.$state.image = user.data.image
 
         this.getUserTheme()
       }
