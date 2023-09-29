@@ -204,10 +204,6 @@ const cropImage = async () => {
     const imgCode = `${Math.random()}`
     const filePath = `avatars/${userStore.id}/${imgCode}.${fileExt}`
 
-    const img = new Image()
-    img.src = URL.createObjectURL(file.value)
-    await new Promise((resolve) => (img.onload = resolve))
-
     if (coordinates) {
       const img = new Image()
       img.src = URL.createObjectURL(file.value)
