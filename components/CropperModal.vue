@@ -117,8 +117,6 @@ const props = defineProps<{
   linkId?: number
 }>()
 
-const { linkId } = toRefs(props)
-
 const file = ref<File | null>(null)
 const video = ref<HTMLVideoElement | null>(null)
 const canvas = ref<HTMLCanvasElement | null>(null)
@@ -206,34 +204,66 @@ const cropImage = async () => {
     const imgCode = `${Math.random()}`
     const filePath = `avatars/${userStore.id}/${imgCode}.${fileExt}`
 
-    try {
-      let { error: uploadError } = await supabase.storage
-        .from('users')
-        .upload(filePath, file.value, {
-          cacheControl: '3600',
-          upsert: false
-        })
-
-      if (uploadError) throw uploadError
-    } catch (e) {
-      throw e
-    }
+    const img = new Image()
+    img.src = URL.createObjectURL(file.value)
+    await new Promise((resolve) => (img.onload = resolve))
 
     if (coordinates) {
-      const imgStyles = {
-        height: coordinates.height,
-        width: coordinates.width,
-        left: coordinates.left,
-        top: coordinates.top
+      const img = new Image()
+      img.src = URL.createObjectURL(file.value)
+      await new Promise((resolve) => (img.onload = resolve))
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      if (coordinates.height && coordinates.width) {
+        canvas.width = Number(coordinates.width)
+        canvas.height = Number(coordinates.height)
       }
 
-      emit('data', {
-        imgStyles,
-        filePath
+      if (ctx) {
+        ctx.drawImage(
+          img,
+          Number(coordinates.left),
+          Number(coordinates.top),
+          Number(coordinates.width),
+          Number(coordinates.height),
+          0,
+          0,
+          Number(coordinates.width),
+          Number(coordinates.height)
+        )
+      }
+
+      const newBlob = await new Promise<Blob>((resolve) => {
+        canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob)
+          } else {
+            throw new Error('Failed to create blob')
+          }
+        }, 'image/png')
       })
+
+      const newFile = new File([newBlob], `${imgCode}.${fileExt}`, {
+        type: 'image/png'
+      })
+
+      try {
+        let { error: uploadError } = await supabase.storage
+          .from('users')
+          .upload(filePath, newFile, {
+            cacheControl: '3600',
+            upsert: false
+          })
+
+        if (uploadError) throw uploadError
+      } catch (e) {
+        throw e
+      }
     }
 
-    // formData.append('id', linkId.value || '')
+    emit('data', {
+      filePath
+    })
 
     isCropping.value = true
   }
