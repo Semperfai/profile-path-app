@@ -1,8 +1,7 @@
 <template>
   <div
     id="UpdateLinkOverlay"
-    class="fixed z-40 top-0 left-0 w-full h-full bg-white px-5"
-  >
+    class="fixed z-40 top-0 left-0 w-full h-full bg-white px-5">
     <div class="w-full md:hidden flex items-center justify-between">
       <div class="flex items-center justify-between w-full py-[8px]">
         <button type="button" @click="close()" class="rounded-full">
@@ -25,8 +24,7 @@
       <div v-show="!isName" class="flex items-center justify-between w-full">
         <div
           @click="isFocused('isName')"
-          class="text-2xl font-semibold mr-2 cursor-pointer"
-        >
+          class="text-2xl font-semibold mr-2 cursor-pointer">
           {{ name }}
         </div>
         <Icon
@@ -34,30 +32,21 @@
           class="cursor-pointer"
           name="octicon:pencil-24"
           size="25"
-          color="#676B5F"
-        />
+          color="#676B5F" />
       </div>
       <input
         v-show="isName"
         id="editNameInputMobile"
         type="text"
         v-model="name"
-        class="w-full text-2xl underline font-semibold focus:outline-none"
-      />
-      <span
-        v-if="errors && errors.name"
-        class="text-red-500 font-sm font-semibold w-full"
-      >
-        {{ errors.name[0] }}
-      </span>
+        class="w-full text-2xl underline font-semibold focus:outline-none" />
     </div>
 
     <div class="flex items-center w-full pt-3 pb-6 border-b-2">
       <div v-show="!isLink" class="flex items-center w-[calc(100%-2px)]">
         <div
           @click="isFocused('isLink')"
-          class="text-lg mr-2 truncate cursor-pointer"
-        >
+          class="text-lg mr-2 truncate cursor-pointer">
           {{ url }}
         </div>
         <Icon
@@ -65,109 +54,123 @@
           class="cursor-pointer min-w-[17px]"
           name="octicon:pencil-24"
           size="25"
-          color="#676B5F"
-        />
+          color="#676B5F" />
       </div>
       <input
         v-show="isLink"
         id="editLinkInputMobile"
         type="text"
         v-model="url"
-        class="w-full text-lg underline focus:outline-none"
-      />
-      <span
-        v-if="errors && errors.url"
-        class="text-red-500 font-sm font-semibold w-full"
-      >
-        {{ errors.url[0] }}
-      </span>
+        class="w-full text-lg underline focus:outline-none" />
     </div>
 
     <div id="UploadImageForLink" class="pt-6">
       <button
         @click="openCropper = true"
-        class="flex items-center justify-center text-xl w-full py-3 rounded-full text-white font-semibold bg-[#8228D9]"
-      >
+        class="flex items-center justify-center text-xl w-full py-3 rounded-full text-white font-semibold bg-[#8228D9]">
         <Icon name="mdi:plus" class="mr-0.5" size="25" />
         Select image
       </button>
 
       <img
-        v-if="currentLink && currentLink.image"
+        v-if="currentLink && currentLink.src"
         class="mx-auto pt-4 aspect-square object-cover"
         width="300"
-        :src="currentLink.image"
-      />
+        :src="currentLink.src" />
     </div>
 
     <CropperModal
       v-if="openCropper"
       :linkId="updatedLinkId"
       @data="data = $event"
-      @close="openCropper = false"
-    />
+      @close="openCropper = false" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { useUserStore } from "~~/stores/user/user.store";
-import { storeToRefs } from "pinia";
-import { type Link } from "~~/shared/types";
-const userStore = useUserStore();
-const { updatedLinkId } = storeToRefs(userStore);
+import { useUserStore } from '~~/stores/user/user.store'
+import { storeToRefs } from 'pinia'
+import { type Link } from '~~/shared/types'
+import { type CropperData } from '~~/components/types/cropper-modal'
+const userStore = useUserStore()
+const { updatedLinkId } = storeToRefs(userStore)
 
-const isName = ref<boolean>(false);
-const isLink = ref<boolean>(false);
-const name = ref<string>("");
-const url = ref<string>("");
-const data = ref(null);
-const currentLink = ref<Link | null>(null);
-const openCropper = ref<boolean>(false);
-const errors = ref(null);
+const isName = ref<boolean>(false)
+const isLink = ref<boolean>(false)
+const name = ref<string>('')
+const url = ref<string>('')
+const data = ref<CropperData | null>(null)
+const currentLink = ref<Link | null>(null)
+const openCropper = ref<boolean>(false)
+const errors = ref(null)
 
 const getLinkById = () => {
   userStore.allLinks.forEach((link) => {
     if (updatedLinkId.value == link.id) {
-      currentLink.value = link;
-      name.value = link.name;
-      url.value = link.url;
+      currentLink.value = link
+      name.value = link.name
+      url.value = link.url
     }
-  });
-};
+  })
+}
 
-const closes = () => (updatedLinkId.value = 0);
+const close = () => (updatedLinkId.value = 0)
 
 const updateLinkImage = async () => {
-  //
-};
+  try {
+    await userStore.updateLinkImage(data.value)
+    await userStore.getAllLinks()
+    getLinkById()
+    setTimeout(() => {
+      openCropper.value = false
+    }, 300)
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 const deleteLink = async () => {
-  let res = confirm("Are you sure you want to delete this link?");
-};
+  let res = confirm('Are you sure you want to delete this link?')
+
+  try {
+    if (res) {
+      await userStore.deleteLink(updatedLinkId.value)
+      await userStore.getAllLinks()
+    }
+  } catch (e) {
+    console.log(e)
+  }
+}
 
 const isFocused = (str: string) => {
-  if (str === "isName") {
+  if (str === 'isName') {
     setTimeout(() => {
-      document.getElementById("editNameInputMobile")?.focus();
-    });
+      document.getElementById('editNameInputMobile')?.focus()
+    })
 
-    isName.value = true;
-    isLink.value = false;
+    isName.value = true
+    isLink.value = false
   }
 
-  if (str === "isLink") {
+  if (str === 'isLink') {
     setTimeout(() => {
-      document.getElementById("editLinkInputMobile")?.focus();
-    });
+      document.getElementById('editLinkInputMobile')?.focus()
+    })
 
-    isName.value = false;
-    isLink.value = true;
+    isName.value = false
+    isLink.value = true
   }
-};
+}
 
 const updateLink = useDebounce(async () => {
-  //
-});
+  try {
+    await userStore.updateLink(updatedLinkId.value, name.value, url.value)
+    await userStore.getAllLinks()
+    getLinkById()
+  } catch (e) {
+    console.log(e)
+  }
+}, 500)
 
 watch(
   () => name.value,
@@ -177,51 +180,51 @@ watch(
       currentLink.value &&
       currentLink.value.name != name.value
     ) {
-      errors.value = null;
-      updateLink();
+      errors.value = null
+      updateLink()
     }
   }
-);
+)
 
 watch(
   () => url.value,
   () => {
     if (url.value && currentLink.value && currentLink.value.url != url.value) {
-      errors.value = null;
-      updateLink();
+      errors.value = null
+      updateLink()
     }
   }
-);
+)
 
 watch(
   () => data.value,
   async () => await updateLinkImage()
-);
+)
 
 onMounted(() => {
-  //getLinkById()
-  //userStore.hidePageOverflow(true,'AdminPage')
+  getLinkById()
+  userStore.hidePageOverflow(true, 'AdminPage')
 
-  document.addEventListener("mouseup", (e) => {
-    let editNameInput = document.getElementById(`editNameInputMobile`);
+  document.addEventListener('mouseup', (e) => {
+    let editNameInput = document.getElementById(`editNameInputMobile`)
 
     if (editNameInput && !editNameInput.contains(e.target as HTMLElement)) {
-      editNameInput.blur();
-      isName.value = false;
+      editNameInput.blur()
+      isName.value = false
     }
-  });
-  document.addEventListener("mouseup", (e) => {
-    let editLinkInput = document.getElementById(`editLinkInputMobile`);
+  })
+  document.addEventListener('mouseup', (e) => {
+    let editLinkInput = document.getElementById(`editLinkInputMobile`)
 
     if (editLinkInput && !editLinkInput.contains(e.target as HTMLElement)) {
-      editLinkInput.blur();
-      isLink.value = false;
+      editLinkInput.blur()
+      isLink.value = false
     }
-  });
-});
+  })
+})
 
 onUnmounted(() => {
-  //   userStore.hidePageOverflow(false, "AdminPage");
-  updatedLinkId.value = 0;
-});
+  userStore.hidePageOverflow(false, 'AdminPage')
+  updatedLinkId.value = 0
+})
 </script>

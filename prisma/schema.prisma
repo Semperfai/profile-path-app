@@ -7,30 +7,24 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Users {
   id         Int         @id @default(autoincrement())
-  userId     String      @unique 
+  userId     String      @db.Uuid
+  theme_id   Int?         
   email      String      @unique
   name       String
-  links      Links[]     
+  bio        String?
+  image      String?
   created_at String
 }
 
 model Links {
   id         Int         @id @default(autoincrement())
-  linksId    Int
-  user       Users        @relation(fields: [linksId], references: [id])
-  linkItem   LinkItem[]
+  userId     String      
+  name       String
+  url        String
+  image      String? 
   created_at DateTime?   @default(now()) @db.Timestamptz(6)
 }
 
-model LinkItem {
-  id         Int         @id @default(autoincrement())
-  linkId     Int
-  name       String
-  url        String
-  image      String
-  link       Links       @relation(fields: [linkId], references: [id])
-  created_at DateTime?   @default(now()) @db.Timestamptz(6)
-}
+

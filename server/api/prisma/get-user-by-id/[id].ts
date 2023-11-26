@@ -1,12 +1,18 @@
-import { PrismaClient } from '@prisma/client'
-const prisma = new PrismaClient()
+import { PrismaClient } from "@prisma/client";
+const prisma = new PrismaClient();
 
 export default defineEventHandler(async (event) => {
   if (event?.context?.params?.id) {
     const res = await prisma.users.findFirst({
-      where: { userId: event.context.params.id }
-    })
+      where: { userId: event.context.params.id },
+    });
 
-    return res
+    if (res) {
+      return res;
+    } else {
+      return {
+        error: "No user found",
+      };
+    }
   }
-})
+});

@@ -9,7 +9,7 @@
     "postinstall": "nuxt prepare"
   },
   "prisma": {
-    "seed":"node prisma/seed.js"
+    "seed": "node prisma/seed.js"
   },
   "overrides": {
     "vue": "latest"
@@ -29,6 +29,8 @@
     "@pinia/nuxt": "^0.4.11",
     "@prisma/client": "^5.2.0",
     "@vite-pwa/nuxt": "^0.1.0",
+    "@vuelidate/core": "^2.0.3",
+    "@vuelidate/validators": "^2.0.4",
     "axios": "^1.4.0",
     "nuxt-icon": "^0.5.0",
     "nuxt-lodash": "^2.5.0",

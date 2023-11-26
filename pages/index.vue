@@ -8,27 +8,31 @@
       <form class="mt-12" @submit.prevent="($event) => login()">
         <div>
           <TextInput
-            v-model:input="email"
-            :error="errors"
+            v-model:input="formData.email"
+            inputType="email"
             placeholder="Email: link@gmail.com"
-            inputType="email" />
+            :validation="v$.email"
+            @server-errors-state="handleServerErrorsState"
+            :server-errors="serverErrors" />
         </div>
 
         <div class="mt-4">
           <TextInput
-            placeholder="Password"
-            v-model:input="password"
+            v-model:input="formData.password"
             inputType="password"
-            :error="errors" />
+            placeholder="Password"
+            :validation="v$.password"
+            @server-errors-state="handleServerErrorsState"
+            :server-errors="serverErrors" />
         </div>
 
         <div class="mt-10">
           <button
             type="submit"
             class="rounded-full w-full p-3 font-bold transition-all duration-300 ease-linear"
-            :disabled="!email || !password"
+            :disabled="submitLogin"
             :class="
-              email && password
+              formData.email && formData.password && !v$.$error
                 ? 'bg-[#8228D9] hover:bg-[#6c21b3] text-white'
                 : 'bg-[#EFF0EB] text-[#A7AAA2]'
             ">
@@ -37,9 +41,9 @@
         </div>
       </form>
 
-      <div class="text-[14px] text-center pt-12">
+      <div class="text-xl text-center pt-12">
         Don't have an account?
-        <NuxtLink to="/register" class="text-[#8228D9] underline">
+        <NuxtLink to="/register" class="text-[#8228D9] underline font-bold">
           Sign up
         </NuxtLink>
       </div>
@@ -50,11 +54,32 @@
 <script setup lang="ts">
 import AuthLayout from '~/layouts/AuthLayout.vue'
 import { useUserStore } from '~/stores/user/user.store'
+import { useVuelidate } from '@vuelidate/core'
+import { required, helpers, minLength, email } from '@vuelidate/validators'
 
 const userStore = useUserStore()
-const email = ref<string>('')
-const password = ref<string>('')
-const errors = ref<string>('')
+
+const formData = reactive({
+  email: '',
+  password: ''
+})
+
+const serverErrors = ref<string>('')
+
+const rules = computed(() => {
+  return {
+    email: {
+      required: helpers.withMessage('The email field is required', required),
+      email: helpers.withMessage('Invalid email format', email)
+    },
+    password: {
+      required: helpers.withMessage('The password field is required', required),
+      minLength: minLength(6)
+    }
+  }
+})
+
+const v$ = useVuelidate(rules, formData)
 
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
@@ -64,33 +89,44 @@ definePageMeta({
   middleware: 'is-logged-in'
 })
 
+const submitLogin = computed(() => {
+  v$.value.$validate()
+  return !formData.email || !formData.password || v$.value.$error
+})
+
 const login = async () => {
-  errors.value = ''
+  serverErrors.value = ''
+
   try {
     const { error } = await supabase.auth.signInWithPassword({
-      email: email.value,
-      password: password.value
+      email: formData.email,
+      password: formData.password
     })
 
-    //todo await userStore.getAllLinks() we need this? we can implement this in store?
-
     if (error) {
-      errors.value = error.message
+      serverErrors.value = error.message
       return
     }
 
-    await userStore.getUser(user.value.id)
+    userStore.id = user.value.id
+
+    await userStore.getUser()
   } catch (error) {
     console.log(error)
   }
 }
 
+const handleServerErrorsState = () => {
+  serverErrors.value = ''
+}
+
 watch(
   user,
-  () => {
+  async () => {
     if (user.value) {
       userStore.id = user.value.id
-      router.push('/admin')
+      await userStore.getUser()
+      router.push('/admin/apperance')
     }
   },
   { immediate: true }

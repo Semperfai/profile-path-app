@@ -17,6 +17,15 @@ export type Link = {
   name: string
   url: string
   image?: string
+  src?: string
+  icon: string
+}
+
+export type Theme = {
+  id: number
+  color: string
+  text: string
+  name: string
 }
 
 export const optionsVariants = [
@@ -25,5 +34,13 @@ export const optionsVariants = [
   'Preview',
   'More'
 ] as const
+
+export type ServerErrors = {
+  response: {
+    data: {
+      errors: string
+    }
+  }
+}
 
 export type CurrentMenuOptionsVariant = (typeof optionsVariants)[number]
