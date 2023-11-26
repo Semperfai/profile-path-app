@@ -1,7 +1,8 @@
 <template>
   <div
     class="fixed overflow-auto w-full h-screen"
-    :class="userStore.theme?.color" />
+    :class="userStore.theme?.color"
+  />
 
   <AdminLayout>
     <div id="PreviewAdminPage" class="w-full mx-auto pt-32 relative z-10">
@@ -9,17 +10,20 @@
         <div class="h-full mx-auto w-full">
           <img
             class="rounded-full min-w-[120px] w-[120px] mx-auto"
-            :src="userStore.src" />
+            :src="userStore.src"
+          />
 
           <div
             class="text-center text-2xl font-semibold mt-2"
-            :class="userStore.theme?.text">
+            :class="userStore.theme?.text"
+          >
             @svyatmatyuha
           </div>
 
           <div
             class="text-center text-lg font-light mt-2 mb-10"
-            :class="userStore.theme?.text">
+            :class="userStore.theme?.text"
+          >
             <div class="px-8">{{ userStore.bio }}</div>
           </div>
 
@@ -27,7 +31,8 @@
             <a
               :href="link.url"
               target="_blank"
-              class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg">
+              class="flex items-center relative border w-[calc(100%-10px)] mx-auto bg-white mt-4 p-1 rounded-lg"
+            >
               <img class="rounded-lg h-[55px] aspect-square" :src="link.src" />
 
               <div class="absolute text-[20px] text-center w-full">
@@ -44,9 +49,9 @@
 </template>
 
 <script setup>
-import AdminLayout from '~~/layouts/AdminLayout.vue'
+import AdminLayout from "~~/layouts/AdminLayout.vue";
 
-import { useUserStore } from '~~/stores/user/user.store'
-const userStore = useUserStore()
-definePageMeta({ middleware: 'is-logged-out' })
+import { useUserStore } from "~~/stores/user/user.store";
+const userStore = useUserStore();
+definePageMeta({ middleware: "is-logged-out" });
 </script>
